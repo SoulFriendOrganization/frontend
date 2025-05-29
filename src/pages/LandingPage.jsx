@@ -16,7 +16,7 @@ function LandingPage() {
                 <div className="mt-8 md:mt-12">
                     <Link 
                         to="/home" 
-                        className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#D4A017] text-white text-lg rounded-lg hover:bg-[#C39316] transition-colors duration-300 shadow-md"
+                        className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#D4A017] text-white text-lg rounded-lg hover:bg-[#C39316] transition-colors duration-300 shadow-md cursor-pointer"
                     >
                         Mulai Sekarang
                         <FaArrowRight className="ml-1" />

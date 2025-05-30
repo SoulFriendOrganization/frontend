@@ -6,35 +6,27 @@ export async function loadHaarFaceModels() {
         console.log("=======start downloading Haar-cascade models=======");
         await loadDataFile(
             "haarcascade_frontalface_default.xml",
-            "models/haarcascade_frontalface_default.xml"
+            "/models/haarcascade_frontalface_default.xml"
         );
         console.log("=======downloaded Haar-cascade models=======");
     } catch (error) {
-        console.error(error);
+        console.error("Error loading Haar cascade models:", error);
     }
 }
 
-/**
- * Detect faces from the input image.
- * See https://docs.opencv.org/master/d2/d99/tutorial_js_face_detection.html
- * @param {cv.Mat} img Input image
- * @returns a new image with detected faces drawn on it.
- */
 export function detectHaarFace(img) {
     const newImg = img.clone();
-
     const gray = new cv.Mat();
     cv.cvtColor(newImg, gray, cv.COLOR_RGBA2GRAY, 0);
 
     const faces = new cv.RectVector();
-    const eyes = new cv.RectVector();
     const faceCascade = new cv.CascadeClassifier();
-    const eyeCascade = new cv.CascadeClassifier();
-    // load pre-trained classifiers
-    faceCascade.load("haarcascade_frontalface_default.xml");
-    // detect faces
+    // Use the same path as provided in the loadHaarFaceModels function
+    faceCascade.load("/haarcascade_frontalface_default.xml");
+
     const msize = new cv.Size(0, 0);
     faceCascade.detectMultiScale(gray, faces, 1.1, 3, 0, msize, msize);
+
     for (let i = 0; i < faces.size(); ++i) {
         const roiGray = gray.roi(faces.get(i));
         const roiSrc = newImg.roi(faces.get(i));
@@ -44,16 +36,14 @@ export function detectHaarFace(img) {
             faces.get(i).y + faces.get(i).height
         );
         cv.rectangle(newImg, point1, point2, [255, 0, 0, 255]);
-        // detect eyes in face ROI
         roiGray.delete();
         roiSrc.delete();
     }
 
+    const result = { image: newImg, faces };
+
     gray.delete();
     faceCascade.delete();
-    eyeCascade.delete();
-    faces.delete();
-    eyes.delete();
 
-    return newImg;
+    return result;
 }

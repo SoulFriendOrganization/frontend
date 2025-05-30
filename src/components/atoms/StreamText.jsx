@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-function StreamText({text, speed = 50}) {
+function StreamText({text, speed = 50, autoNext = false,  setNext= null}) {
     const [displayText, setDisplayText] = useState("");
     const [index, setIndex] = useState(0);
 
@@ -14,6 +14,13 @@ function StreamText({text, speed = 50}) {
             return () => clearTimeout(timeout);
         }
     }, [index, text, speed]);
+
+    if (autoNext && index >= text.length) {
+        setTimeout(() => {
+            setNext(true)
+            autoNext = false;
+        }, 1000);
+    }
 
     return displayText;
 }

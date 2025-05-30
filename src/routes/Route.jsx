@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import { LandingPage, HomePage, RegisterPage, LoginPage } from "../pages";
 import { Layout } from "../components/templates";
+import TestPage from "../pages/TestPage";
 // import Middleware from "./Middleware";
 
 const Routers = () => {
@@ -16,6 +17,8 @@ const Routers = () => {
                     }
                 />
                 <Route path="/register" element={<RegisterPage/>}/>
+
+
                 <Route
                     path="/"
                     element={
@@ -25,6 +28,7 @@ const Routers = () => {
                     <Route index element={<LandingPage />} />
                 </Route>
                 <Route path="/home" element={<HomePage/>}/>
+                <Route path="/test" element={<TestPage/>}/>
                {/* <Route path="*" element={<NotFoundPage />} /> */}
             </Routes>
         </BrowserRouter>

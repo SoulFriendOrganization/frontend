@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router";
-import { LandingPage, HomePage, RegisterPage, LoginPage } from "../pages";
+import { LandingPage, OverviewPage, RegisterPage, LoginPage, HomePage } from "../pages";
 import { Layout } from "../components/templates";
 // import Middleware from "./Middleware";
 
@@ -16,8 +16,6 @@ const Routers = () => {
                     }
                 />
                 <Route path="/register" element={<RegisterPage/>}/>
-
-
                 <Route
                     path="/"
                     element={
@@ -26,6 +24,7 @@ const Routers = () => {
                 >
                     <Route index element={<LandingPage />} />
                 </Route>
+                <Route path="/overview" element={<OverviewPage/>}/>
                 <Route path="/home" element={<HomePage/>}/>
                {/* <Route path="*" element={<NotFoundPage />} /> */}
             </Routes>

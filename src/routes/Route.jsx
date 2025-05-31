@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router";
-import { LandingPage, OverviewPage, RegisterPage, LoginPage, HomePage, ValidateWebsitePage } from "../pages";
+import { LandingPage, OverviewPage, RegisterPage, LoginPage, HomePage, ValidateWebsitePage, EducationPage } from "../pages";
 import { Layout } from "../components/templates";
 // import Middleware from "./Middleware";
 
@@ -27,6 +27,7 @@ const Routers = () => {
                 <Route path="/overview" element={<OverviewPage/>}/>
                 <Route path="/home" element={<HomePage/>}/>
                 <Route path="/validate-website" element={<ValidateWebsitePage/>}/>
+                <Route path="/education" element={<EducationPage/>}/>
                {/* <Route path="*" element={<NotFoundPage />} /> */}
             </Routes>
         </BrowserRouter>

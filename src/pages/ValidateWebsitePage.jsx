@@ -18,7 +18,7 @@ function ValidateWebsitePage() {
                     <input 
                     type="text" 
                     className="ring-2 ring-[#D4A017] rounded-full w-full focus:outline-none px-5 py-3 pr-14 text-lg"
-                    placeholder="Ketik nama Anda di sini..."
+                    placeholder="Ketik link web di sini..."
                     />
                     <button 
                     type="submit"

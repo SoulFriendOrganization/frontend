@@ -36,7 +36,7 @@ function HomePage() {
                         <p className="text-center text-gray-700 mb-6">Pelajari tentang kesehatan mental dan cara mengidentifikasi informasi hoax</p>
                     </div>
                     <div className="w-full rounded-md overflow-hidden text-white">
-                        <Link to="/edu" className="bg-[#D4A017] w-full h-12 items-center justify-center flex gap-2 hover:bg-[#C09016] transition-colors">
+                        <Link to="/education" className="bg-[#D4A017] w-full h-12 items-center justify-center flex gap-2 hover:bg-[#C09016] transition-colors">
                             Belajar Sekarang <FaArrowRight className="w-4 h-4"/>
                         </Link>
                     </div>

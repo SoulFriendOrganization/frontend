@@ -29,7 +29,6 @@ function HomePage() {
                         </Link>
                     </div>
                 </div>
-                
                 <div className="flex flex-col items-center justify-between p-6 rounded-lg bg-white/50 shadow-sm h-full">
                     <div>
                         <TbBook className="w-12 h-12 text-[#D4A017] mb-4 mx-auto" />
@@ -50,7 +49,7 @@ function HomePage() {
                         <p className="text-center text-gray-700 mb-6">Verifikasi keaslian website untuk menghindari informasi hoax</p>
                     </div>
                     <div className="w-full rounded-md overflow-hidden text-white">
-                        <Link to="/verify" className="bg-[#D4A017] w-full h-12 items-center justify-center flex gap-2 hover:bg-[#C09016] transition-colors">
+                        <Link to="/validate-website" className="bg-[#D4A017] w-full h-12 items-center justify-center flex gap-2 hover:bg-[#C09016] transition-colors">
                             Verifikasi Website <FaArrowRight className="w-4 h-4"/>
                         </Link>
                     </div>

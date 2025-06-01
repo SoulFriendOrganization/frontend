@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router";
-import { LandingPage, OverviewPage, RegisterPage, LoginPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage } from "../pages";
+import { LandingPage, OverviewPage, RegisterPage, LoginPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage, QuizPage } from "../pages";
 import Middleware from "./Middleware";
 
 const Routers = () => {
@@ -25,7 +25,7 @@ const Routers = () => {
                 <Route path="/home" element={<Middleware type="need-login"><HomePage/></Middleware>} />
                 <Route path="/validate-website" element={<Middleware type="need-login"><ValidateWebsitePage/></Middleware>} />
                 <Route path="/education" element={<Middleware type="need-login"><EducationPage/></Middleware>} />
-                {/* <Route path="/quiz" element={<Middleware type="need-login"><QuizPage/></Middleware>} /> */}
+                <Route path="/quiz" element={<Middleware type="need-login"><QuizPage/></Middleware>} />
                 {/* <Route path="/cek-mood" element={<Middleware type="need-login"><MoodPage/></Middleware>} /> */}
                <Route path="*" element={<NotFoundPage />} />
             </Routes>

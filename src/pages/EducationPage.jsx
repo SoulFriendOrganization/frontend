@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { IoReturnDownBack } from "react-icons/io5";
 import { Link } from "react-router";
 import { courseModules } from '../utils';
-import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowForward, IoIosClose } from "react-icons/io";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { FaBookOpen, FaGraduationCap } from "react-icons/fa";
 import { MdOutlineWatchLater } from "react-icons/md";
@@ -11,8 +11,12 @@ function EducationPage() {
     const [selectedModule, setSelectedModule] = useState(0);
     const [selectedSubmodule, setSelectedSubmodule] = useState(0);
     const [expandedModules, setExpandedModules] = useState([0]);
-    const [content, setContent] = useState('');
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [content, setContent] = useState('');    
+    const [sidebarOpen, setSidebarOpen] = useState(() => {
+        // Mengambil preferensi sidebar dari localStorage, default: true
+        const savedPreference = localStorage.getItem('educationSidebarOpen');
+        return savedPreference !== null ? JSON.parse(savedPreference) : true;
+    });
     const [isLoading, setIsLoading] = useState(true);
       useEffect(() => {
         setIsLoading(true);
@@ -48,10 +52,11 @@ function EducationPage() {
             setContent(courseModules[moduleIndex].submodules[submoduleIndex].content);
             setIsLoading(false);
         }, 300);
-    };
-
+    };    
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen);
+        // Menyimpan preferensi sidebar di localStorage
+        localStorage.setItem('educationSidebarOpen', !sidebarOpen);
     };
       const formatContent = (content) => {
         if (!content) return null;
@@ -59,24 +64,27 @@ function EducationPage() {
         return content.split('\n\n').map((paragraph, index) => (
             <p key={index} className="mb-6 leading-relaxed text-gray-700">{paragraph}</p>
         ));
-    };    return (
-        <div className="w-full min-h-svh bg-gradient-to-br from-[#FFF8E9] to-[#FFEBC8] flex relative">
-            <div className="fixed top-0 left-0 w-full h-16 bg-gradient-to-r from-orange-400 to-orange-500 shadow-md z-10">
-                <Link to="/home" className="absolute top-4 left-6 flex items-center gap-2">
-                    <IoReturnDownBack className="cursor-pointer w-7 h-7 text-white hover:text-orange-100 transition-colors" />
-                    <span className="text-white font-medium">Kembali</span>
+    };    return (        
+    <div className="w-full min-h-svh bg-[#FFEBC8] flex relative">              
+    <div className="fixed top-0 left-0 w-full h-16 z-10 bg-white shadow-sm flex items-center justify-between px-6">
+                <Link to="/home" className="flex items-center gap-2 text-orange-500">
+                    <IoReturnDownBack className="cursor-pointer w-5 h-5" />
+                    <span className="font-medium">Kembali</span>
                 </Link>
                 
+                <h3 className="font-medium text-gray-700">Platform Pembelajaran</h3>                
                 <button 
-                    className="fixed top-4 right-6 z-20 cursor-pointer flex items-center justify-center bg-white hover:bg-orange-50 text-orange-500 p-2 rounded-full shadow-lg transition-all duration-300"
+                    className={`flex items-center justify-center p-2 rounded-lg bg-orange-500 text-white hover:bg-orange-600 transition-all duration-300 shadow-md transform hover:scale-105 ${sidebarOpen ? 'animate-pulse' : ''}`}
                     onClick={toggleSidebar}
-                    aria-label="Toggle sidebar"
+                    aria-label={sidebarOpen ? "Sembunyikan sidebar" : "Tampilkan sidebar"}
                 >
-                    <HiMenuAlt2 className="w-6 h-6" />
-                </button>
-            </div>
+                    {sidebarOpen ? 
+                        <IoIosClose className="w-5 h-5 transform transition-transform duration-300" /> : 
+                        <HiMenuAlt2 className="w-5 h-5 transform transition-transform duration-300" />}
+                    <span className="text-sm ml-1.5 hidden md:inline">{sidebarOpen ? "Sembunyikan" : "Menu"}</span>
+                </button></div>
             
-            <div className={`flex-1 flex flex-col pt-24 px-4 md:px-8 pb-16 overflow-y-auto transition-all duration-300 ${sidebarOpen ? 'mr-0 md:mr-80' : 'mr-0'}`}>
+            <div className={`flex-1 flex flex-col pt-24 px-4 md:px-8 pb-16 overflow-y-auto transition-all duration-300 ${sidebarOpen ? 'mr-0 md:mr-72' : 'mr-0'}`}>
                 <div className="max-w-3xl mx-auto w-full">
                     <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
                         <div className="flex items-center mb-2 text-orange-500">
@@ -109,59 +117,59 @@ function EducationPage() {
                         </div>
                     </div>
                 </div>
-            </div>
-              <div 
-                className={`fixed top-0 right-0 h-full z-10 bg-white border-l border-orange-200 shadow-2xl overflow-y-auto transition-transform duration-300 ease-in-out ${
+            </div>              <div 
+                className={`fixed top-0 right-0 h-full z-10 bg-white overflow-y-auto transition-transform duration-300 ease-in-out shadow-lg ${
                     sidebarOpen ? 'translate-x-0' : 'translate-x-full'
-                } w-full sm:w-80`}
-            >
-                <div className="p-4 pt-20 bg-gradient-to-b from-orange-50 to-white">
-                    <div className="mb-6">
-                        <div className="flex items-center justify-center gap-2 p-3 bg-orange-500 rounded-lg shadow-md text-white">
-                            <FaBookOpen className="w-5 h-5" />
-                            <h2 className="text-xl font-bold">Materi Pembelajaran</h2>
-                        </div>
+                } w-full sm:w-72`}
+            >                {/* Tombol tutup sidebar yang interaktif */}
+                <button 
+                    className="absolute top-4 right-4 p-2.5 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-all duration-300 transform hover:rotate-90 hover:scale-110 z-20 shadow-md"
+                    onClick={toggleSidebar}
+                    aria-label="Tutup sidebar"
+                >
+                    <IoIosClose className="w-6 h-6" />
+                </button>
+
+                <div className="p-4 pt-20">
+                    <div className="mb-8 text-center">
+                        <FaBookOpen className="w-6 h-6 mx-auto mb-2 text-orange-500" />
+                        <h2 className="text-xl font-bold text-gray-800 border-b border-gray-100 pb-2">Materi Pembelajaran</h2>
                     </div>
                     
-                    <div className="space-y-3">
+                    <div className="space-y-1.5">
                         {courseModules.map((module, moduleIndex) => (
-                            <div key={moduleIndex} className="bg-white rounded-lg shadow-sm border border-orange-100 overflow-hidden mb-2">
+                            <div key={moduleIndex} className="mb-3">
                                 <div 
-                                    className={`flex items-center justify-between p-3 cursor-pointer ${
-                                        selectedModule === moduleIndex && selectedSubmodule === 0 
-                                        ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white' 
-                                        : 'bg-orange-50 hover:bg-orange-100 text-gray-800'
+                                    className={`flex items-center justify-between p-2 cursor-pointer rounded-md ${
+                                        selectedModule === moduleIndex
+                                        ? 'text-orange-500 font-medium' 
+                                        : 'text-gray-700 hover:text-orange-500'
                                     }`}
                                     onClick={() => handleModuleClick(moduleIndex)}
                                 >
-                                    <span className="font-medium">{module.moduleTitle}</span>
-                                    {expandedModules.includes(moduleIndex) ? (
-                                        <IoIosArrowDown className={selectedModule === moduleIndex ? "text-white" : "text-orange-500"} />
-                                    ) : (
-                                        <IoIosArrowForward className={selectedModule === moduleIndex ? "text-white" : "text-orange-500"} />
-                                    )}
+                                    <span>{module.moduleTitle}</span>
+                                    <div className="text-sm">
+                                        {expandedModules.includes(moduleIndex) ? (
+                                            <IoIosArrowDown className={selectedModule === moduleIndex ? "text-orange-500" : "text-gray-400"} />
+                                        ) : (
+                                            <IoIosArrowForward className={selectedModule === moduleIndex ? "text-orange-500" : "text-gray-400"} />
+                                        )}
+                                    </div>
                                 </div>
                             
                                 {expandedModules.includes(moduleIndex) && (
-                                    <div className="bg-white">
+                                    <div className="ml-3 pl-2 border-l border-gray-100">
                                         {module.submodules.map((submodule, subIndex) => (
                                             <div 
                                                 key={subIndex}
-                                                className={`py-2.5 px-4 cursor-pointer border-t border-orange-50 ${
+                                                className={`py-2 px-3 cursor-pointer text-sm rounded-md my-0.5 ${
                                                     selectedModule === moduleIndex && selectedSubmodule === subIndex
-                                                    ? 'bg-orange-100 text-orange-800 font-medium border-l-4 border-l-orange-500' 
-                                                    : 'hover:bg-orange-50'
+                                                    ? 'text-orange-600 font-medium bg-orange-50' 
+                                                    : 'text-gray-600 hover:bg-gray-50'
                                                 }`}
                                                 onClick={() => handleSubmoduleClick(moduleIndex, subIndex)}
                                             >
-                                                <div className="flex items-center">
-                                                    <div className={`w-2 h-2 rounded-full mr-2 ${
-                                                        selectedModule === moduleIndex && selectedSubmodule === subIndex
-                                                        ? 'bg-orange-500'
-                                                        : 'bg-gray-300'
-                                                    }`}></div>
-                                                    {submodule.title}
-                                                </div>
+                                                {submodule.title}
                                             </div>
                                         ))}
                                     </div>

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { motion } from "motion/react"
-import { StreamText } from "../atoms";
+import StreamText from "./StreamText"
 import { IoEnterOutline } from "react-icons/io5";
 
 function RenderNameForm({handleSubmit, setName, name}) {

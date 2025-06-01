@@ -2,6 +2,8 @@ import authBgImage from '/authBg.svg';
 import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
+import { registerService } from '../services';
 
 function RegisterPage() {
     const [showPassword, setShowPassword] = useState(false);
@@ -21,14 +23,12 @@ function RegisterPage() {
             confirmPassword: ''
         }
     });
-
-    const password = watch('password');
-
+    const password = watch('password');    
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();    
     const onSubmit = (data) => {
-        console.log(data);
-        // Here you would handle the form submission to your API
-        alert('Registration successful!');
-        reset();
+        registerService(data, setError, setLoading, navigate, reset);
     };
 
     return (
@@ -163,12 +163,17 @@ function RegisterPage() {
                                     </button>
                                 </div>
                                 {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 ml-1">{errors.confirmPassword.message}</p>}
-                            </div>
+                            </div>                            {error && (
+                                <div className="mb-4 p-3 bg-red-100 border border-red-200 text-red-700 rounded-lg">
+                                    {error}
+                                </div>
+                            )}
                             <button 
                                 type="submit" 
-                                className="w-full bg-[#D4A017] text-white py-3 rounded-lg font-medium hover:bg-[#C39316] transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                                className="w-full bg-[#D4A017] text-white py-3 rounded-lg font-medium hover:bg-[#C39316] transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer"
+                                disabled={loading}
                             >
-                                Create Account
+                                {loading ? "Creating Account..." : "Create Account"}
                             </button>
                               <p className="text-center mt-4 text-sm text-gray-600">
                                 Already have an account? <a href="/login" className="text-[#D4A017] hover:underline">Sign In</a>

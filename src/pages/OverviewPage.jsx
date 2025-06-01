@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
-import { RenderNameForm, RenderUserAgreement, RenderWebcam } from "../components/organisms";
+import { RenderNameForm, RenderUserAgreement, RenderWebcam } from "../components";
 import cv from "@techstark/opencv-js";
 
 window.cv = cv;

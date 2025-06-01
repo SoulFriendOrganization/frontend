@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { IoReturnDownBack } from "react-icons/io5";
 import { Link } from "react-router";
-import { courseModules } from '../utils/materiDummy';
+import { courseModules } from '../utils';
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { HiMenuAlt2 } from "react-icons/hi";
 
@@ -55,7 +55,7 @@ function EducationPage() {
             </Link>
             
             <button 
-                className="fixed top-6 right-6 z-20 flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full shadow-lg transition-all duration-300"
+                className="fixed top-6 right-6 z-20 cursor-pointer flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full shadow-lg transition-all duration-300"
                 onClick={toggleSidebar}
                 aria-label="Toggle sidebar"
             >

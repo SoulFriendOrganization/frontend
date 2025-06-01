@@ -2,9 +2,15 @@ import authBgImage from '/authBg.svg';
 import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
+import { loginService } from '../services';
 
 function LoginPage() {
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
     const { 
         register,
         handleSubmit,
@@ -19,10 +25,7 @@ function LoginPage() {
     });
 
     const onSubmit = (data) => {
-        console.log(data);
-        // Here you would handle the login submission to your API
-        alert('Login successful!');
-        reset();
+        loginService(data, setError, setLoading, navigate, reset);
     };
     
     return (
@@ -80,13 +83,18 @@ function LoginPage() {
                                 {errors.password && <p className="text-red-500 text-xs mt-1 ml-1">{errors.password.message}</p>}
                             </div>
                             <div className="flex items-center justify-between mb-4">
-                                <a href="#" className="text-sm text-[#D4A017] hover:underline">Forgot password?</a>
-                            </div>
+                                <a href="#" className="text-sm text-[#D4A017] hover:underline">Forgot password?</a>                            </div>
+                            {error && (
+                                <div className="mb-4 p-3 bg-red-100 border border-red-200 text-red-700 rounded-lg">
+                                    {error}
+                                </div>
+                            )}
                             <button 
                                 type="submit" 
-                                className="w-full bg-[#D4A017] text-white py-3 rounded-lg font-medium hover:bg-[#C39316] transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                                className="w-full bg-[#D4A017] text-white py-3 rounded-lg font-medium hover:bg-[#C39316] transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={loading}
                             >
-                                Sign In
+                                {loading ? "Signing In..." : "Sign In"}
                             </button>                            
                             <p className="text-center mt-4 text-sm text-gray-600">
                                 Don't have an account? <a href="/register" className="text-[#D4A017] hover:underline">Sign Up</a>

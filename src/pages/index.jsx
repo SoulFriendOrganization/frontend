@@ -5,5 +5,6 @@ import RegisterPage from "./RegisterPage";
 import HomePage from "./HomePage";
 import ValidateWebsitePage from "./ValidateWebsitePage";
 import EducationPage from "./EducationPage";
+import NotFoundPage from "./NotFoundPage";
 
-export {LandingPage, OverviewPage, LoginPage, RegisterPage, HomePage, ValidateWebsitePage, EducationPage};
+export {LandingPage, OverviewPage, LoginPage, RegisterPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage};

@@ -13,6 +13,7 @@
     "@tailwindcss/vite": "^4.1.8",
     "@techstark/opencv-js": "^4.10.0-release.1",
     "axios": "^1.9.0",
+    "js-cookie": "^3.0.5",
     "motion": "^12.15.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
-import { loadHaarFaceModels, detectHaarFace } from "../../utils";
+import { loadHaarFaceModels, detectHaarFace } from "../utils";
 
 const FRAMES_REQUIRED = 10;
 const CAPTURE_INTERVAL_MS = 100;

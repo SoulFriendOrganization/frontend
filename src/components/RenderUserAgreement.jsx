@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { motion } from "motion/react"
-import {StreamText} from "../atoms";
+import StreamText from "./StreamText"
+
 
 function RenderUserAgreement({name, setIsUserAgreed}) {
     return (  

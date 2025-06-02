@@ -1,4 +1,9 @@
 import { registerService, loginService } from "./AuthService";
-import { checkMoodTrialService } from "./checkMoodService";
+import { checkMoodTrialService, checkMoodService } from "./checkMoodService";
 
-export { registerService, loginService, checkMoodTrialService };
+export {
+    registerService,
+    loginService,
+    checkMoodTrialService,
+    checkMoodService,
+};

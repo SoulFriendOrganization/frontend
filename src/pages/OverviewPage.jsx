@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { RenderNameForm, RenderUserAgreement, RenderWebcam, RenderChatbot } from "../components";
 import cv from "@techstark/opencv-js";
+import { Link } from "react-router";
+import { IoReturnDownBack } from "react-icons/io5";
 
 window.cv = cv;
 
@@ -62,9 +64,11 @@ function OverviewPage() {
       }
     };
   }, [isUserAgreed]);
-
   return (
     <div className="w-full min-h-svh bg-[#FFEBC8] flex flex-col items-center justify-center overflow-hidden">
+      <Link to="/">
+        <IoReturnDownBack className="absolute top-10 left-10 cursor-pointer w-10 h-10"/>
+      </Link>
       <AnimatePresence mode="wait">
         {currentScreen === "nameForm" && (
           <RenderNameForm handleSubmit={handleSubmit} setName={setName} name={name} />
@@ -72,7 +76,7 @@ function OverviewPage() {
         {currentScreen === "userAgreement" && (
           <RenderUserAgreement name={name} setIsUserAgreed={setIsUserAgreed} />
         )}
-        {currentScreen === "webcam" && (
+        {currentScreen === "webcam" && (          
           <RenderWebcam
             isVideoLoading={isVideoLoading}
             videoError={videoError}
@@ -80,6 +84,7 @@ function OverviewPage() {
             imageSent={imageSent}
             setImageSent={setImageSent}
             setUserExpression={setUserExpression}
+            pageType="overview"
           />
         )} 
         {currentScreen === "chatbot" && (

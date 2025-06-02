@@ -7,5 +7,6 @@ import ValidateWebsitePage from "./ValidateWebsitePage";
 import EducationPage from "./EducationPage";
 import NotFoundPage from "./NotFoundPage";
 import QuizPage from "./QuizPage";
+import MoodPage from "./MoodPage";
 
-export {LandingPage, OverviewPage, LoginPage, RegisterPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage, QuizPage};
+export { MoodPage, LandingPage, OverviewPage, LoginPage, RegisterPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage, QuizPage};

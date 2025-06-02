@@ -2,21 +2,34 @@
 import { motion } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 import { loadHaarFaceModels, detectHaarFace } from "../utils";
-import { checkMoodTrialService } from "../services";
+import { checkMoodTrialService, checkMoodService } from "../services";
 
 const FRAMES_REQUIRED = 10;
 const CAPTURE_INTERVAL_MS = 100;
 
-function RenderWebcam({ isVideoLoading, videoError, videoRef, imageSent, setImageSent, setUserExpression }) {
+function RenderWebcam({ 
+  isVideoLoading, 
+  videoError, 
+  videoRef, 
+  imageSent, 
+  setImageSent, 
+  setUserExpression,
+  pageType = "overview",
+  setErrorMessage
+}) {
   const [faceDetectedFrameCount, setFaceDetectedFrameCount] = useState(0);
 
   useEffect(() => {
     loadHaarFaceModels();
   }, []);
-
+  
   const sendImageToBackend = useCallback(async (imageData) => {
-    await checkMoodTrialService(imageData, setUserExpression);
-  }, [setUserExpression]);
+    if (pageType === "mood") {
+      await checkMoodService(imageData, setUserExpression, setErrorMessage);
+    } else {
+      await checkMoodTrialService(imageData, setUserExpression);
+    }
+  }, [pageType, setUserExpression, setErrorMessage]);
 
   const processFrame = useCallback(() => {
     if (

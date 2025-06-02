@@ -1,33 +1,28 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import { LandingPage, OverviewPage, RegisterPage, LoginPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage, QuizPage } from "../pages";
-import Middleware from "./Middleware";
+import { PrivateRoute, PublicRoute } from "./ProtectedRoutes";
 
 const Routers = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route
-                    path="/login"
-                    element={
-                        <Middleware type="no-need-login">
-                            <LoginPage />
-                        </Middleware>
-                    }
-                />
-                <Route path="/register" element={
-                    <Middleware type="no-need-login">
-                        <RegisterPage/>
-                    </Middleware>
-                    }
-                />
-                <Route path="/" element={<Middleware type="need-login"><LandingPage /></Middleware>} />
-                <Route path="/overview" element={<Middleware type="need-login"><OverviewPage/></Middleware>} />
-                <Route path="/home" element={<Middleware type="need-login"><HomePage/></Middleware>} />
-                <Route path="/validate-website" element={<Middleware type="need-login"><ValidateWebsitePage/></Middleware>} />
-                <Route path="/education" element={<Middleware type="need-login"><EducationPage/></Middleware>} />
-                <Route path="/quiz" element={<Middleware type="need-login"><QuizPage/></Middleware>} />
-                {/* <Route path="/cek-mood" element={<Middleware type="need-login"><MoodPage/></Middleware>} /> */}
-               <Route path="*" element={<NotFoundPage />} />
+                <Route path="/" element={<LandingPage />} />
+                
+                <Route element={<PublicRoute restricted={true} />}>
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/overview" element={<OverviewPage />} />
+                </Route>
+                
+                <Route element={<PrivateRoute />}>
+                    <Route path="/home" element={<HomePage />} />
+                    <Route path="/validate-website" element={<ValidateWebsitePage />} />
+                    <Route path="/education" element={<EducationPage />} />
+                    <Route path="/quiz" element={<QuizPage />} />
+                    {/* <Route path="/cek-mood" element={<MoodPage />} /> */}
+                </Route>
+                
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </BrowserRouter>
     );

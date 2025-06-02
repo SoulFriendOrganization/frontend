@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
-import { RenderNameForm, RenderUserAgreement, RenderWebcam } from "../components";
+import { RenderNameForm, RenderUserAgreement, RenderWebcam, RenderChatbot } from "../components";
 import cv from "@techstark/opencv-js";
 
 window.cv = cv;
@@ -14,11 +14,14 @@ function OverviewPage() {
   const [videoError, setVideoError] = useState(null);
   const [imageSent, setImageSent] = useState(false);
   const videoRef = useRef(null);
+  const [userExpression, setUserExpression] = useState("");
 
   const currentScreen = !isFormSubmitted
     ? "nameForm"
     : !isUserAgreed
     ? "userAgreement"
+    : imageSent && userExpression
+    ? "chatbot"
     : "webcam";
 
   const handleSubmit = (e) => {
@@ -76,6 +79,13 @@ function OverviewPage() {
             videoRef={videoRef}
             imageSent={imageSent}
             setImageSent={setImageSent}
+            setUserExpression={setUserExpression}
+          />
+        )} 
+        {currentScreen === "chatbot" && (
+          <RenderChatbot 
+            name={name}
+            userExpression={userExpression}
           />
         )}
       </AnimatePresence>

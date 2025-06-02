@@ -4,6 +4,7 @@ import RenderNameForm from "./RenderNameForm";
 import RenderUserAgreement from "./RenderUserAgreement";
 import RenderWebcam from "./RenderWebcam";
 import StreamText from "./StreamText";
+import RenderChatbot from "./RenderChatbot";
 
 export {
   Footer,
@@ -11,5 +12,6 @@ export {
   RenderNameForm,
   RenderUserAgreement,
   RenderWebcam,
-  StreamText
+  StreamText,
+  RenderChatbot
 };

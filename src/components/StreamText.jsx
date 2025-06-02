@@ -17,7 +17,9 @@ function StreamText({text, speed = 50, autoNext = false,  setNext= null}) {
 
     if (autoNext && index >= text.length) {
         setTimeout(() => {
-            setNext(true)
+            if (setNext) {
+                setNext(true);
+            }
             autoNext = false;
         }, 1000);
     }

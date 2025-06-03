@@ -22,7 +22,6 @@ function Navbar() {
         <nav className="bg-[#D4A017] w-full h-16 flex items-center justify-between fixed top-0 z-50 text-white px-4 md:px-12">
             <Link to="/" className="text-2xl font-semibold">SoulFriend</Link>
             
-            {/* Mobile menu button */}
             <button 
                 onClick={toggleMenu}
                 className="md:hidden focus:outline-none"
@@ -30,28 +29,26 @@ function Navbar() {
             >
                 {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
             </button>
-              {/* Desktop Navigation */}
             <div className="hidden md:flex items-center">
                 {token ? (
                     <button 
                         onClick={handleLogout} 
-                        className="px-4 hover:text-gray-200 flex items-center gap-2"
+                        className="px-4 hover:text-gray-200 flex items-center gap-2 cursor-pointer"
                     >
                         <FiLogOut /> Logout
                     </button>
                 ) : (
                     <>
-                        <Link to="/login" className="px-4 hover:text-gray-200 flex items-center gap-2">
+                        <Link to="/login" className="px-4 hover:text-gray-200 flex items-center gap-2 cursor-pointer">
                             <FiLogIn /> Sign In
                         </Link>
-                        <Link to="/register" className="px-4 hover:text-gray-200 flex items-center gap-2">
+                        <Link to="/register" className="px-4 hover:text-gray-200 flex items-center gap-2 cursor-pointer">
                             <FiUserPlus /> Sign Up
                         </Link>
                     </>
                 )}
             </div>
             
-            {/* Mobile Navigation */}
             {isOpen && (
                 <div className="absolute top-16 left-0 right-0 bg-[#D4A017] p-4 md:hidden flex flex-col gap-2">
                     {token ? (
@@ -60,7 +57,7 @@ function Navbar() {
                                 handleLogout();
                                 toggleMenu();
                             }}
-                            className="px-4 py-2 hover:bg-[#C39316] rounded flex items-center gap-2 text-left"
+                            className="px-4 py-2 hover:bg-[#C39316] rounded flex items-center gap-2 text-left cursor-pointer"
                         >
                             <FiLogOut /> Logout
                         </button>
@@ -68,14 +65,14 @@ function Navbar() {
                         <>
                             <Link 
                                 to="/login" 
-                                className="px-4 py-2 hover:bg-[#C39316] rounded flex items-center gap-2"
+                                className="px-4 py-2 hover:bg-[#C39316] rounded flex items-center gap-2 cursor-pointer"
                                 onClick={toggleMenu}
                             >
                                 <FiLogIn /> Sign In
                             </Link>
                             <Link 
                                 to="/register" 
-                                className="px-4 py-2 hover:bg-[#C39316] rounded flex items-center gap-2"
+                                className="px-4 py-2 hover:bg-[#C39316] rounded flex items-center gap-2 cursor-pointer"
                                 onClick={toggleMenu}
                             >
                                 <FiUserPlus /> Sign Up

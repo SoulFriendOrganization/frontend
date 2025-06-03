@@ -86,11 +86,12 @@ function OverviewPage() {
             setUserExpression={setUserExpression}
             pageType="overview"
           />
-        )} 
+        )}        
         {currentScreen === "chatbot" && (
           <RenderChatbot 
             name={name}
             userExpression={userExpression}
+            isTrial={true}
           />
         )}
       </AnimatePresence>

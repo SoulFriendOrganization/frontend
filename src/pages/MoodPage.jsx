@@ -13,14 +13,20 @@ function MoodPage() {
   const [videoError, setVideoError] = useState(null);
   const [imageSent, setImageSent] = useState(false);
   const videoRef = useRef(null);
-  const [userExpression, setUserExpression] = useState("");
-  const [name, setName] = useState("Teman");
+  const [userExpression, setUserExpression] = useState("");  const [name, setName] = useState("Teman");
+  const [userId, setUserId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const storedName = localStorage.getItem("userName");
+    const storedUserId = localStorage.getItem("userId");
+    
     if (storedName) {
       setName(storedName);
+    }
+    
+    if (storedUserId) {
+      setUserId(storedUserId);
     }
   }, []);
 
@@ -82,11 +88,12 @@ function MoodPage() {
               setErrorMessage={setErrorMessage}
             />
           </motion.div>
-        )} 
-        {currentScreen === "chatbot" && (
+        )}          {currentScreen === "chatbot" && (
           <RenderChatbot 
             name={name}
+            userId={userId}
             userExpression={userExpression}
+            isTrial={false}
           />
         )}
         {currentScreen === "error" && (

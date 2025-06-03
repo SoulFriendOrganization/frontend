@@ -2,8 +2,10 @@ import authBgImage from '/authBg.svg';
 import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 import { loginService } from '../services';
+import { IoReturnDownBack } from "react-icons/io5";
+
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -30,6 +32,9 @@ function LoginPage() {
     
     return (
         <div className="min-h-svh w-full bg-[#FFEBC8]">
+            <Link to="/">
+                <IoReturnDownBack className="absolute top-4 sm:top-6 md:top-10 left-4 sm:left-6 md:left-10 cursor-pointer w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10"/>
+            </Link>
             <div className="flex flex-col md:flex-row h-svh">
                 <div className="flex-1 flex flex-col items-center justify-center p-8">                      
                     <div className="w-full max-w-lg">

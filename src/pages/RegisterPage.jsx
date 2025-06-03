@@ -2,8 +2,10 @@ import authBgImage from '/authBg.svg';
 import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router';
+import { IoReturnDownBack } from "react-icons/io5";
 import { registerService } from '../services';
+
 
 function RegisterPage() {
     const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +35,10 @@ function RegisterPage() {
 
     return (
         <div className="min-h-svh w-full bg-[#FFEBC8]">
-            <div className="flex flex-col md:flex-row h-svh">
+            <Link to="/">
+                <IoReturnDownBack className="absolute top-4 sm:top-6 md:top-10 left-4 sm:left-6 md:left-10 cursor-pointer w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10"/>
+            </Link>
+            <div className="flex flex-col md:flex-row min-h-svh">
                 <div className="flex-1 flex flex-col items-center justify-center p-8">                      
                     <div className="w-full max-w-lg">
                         <h1 className="text-3xl font-bold text-[#D4A017] mb-6 text-center">Sign Up</h1>

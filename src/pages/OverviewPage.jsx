@@ -63,11 +63,10 @@ function OverviewPage() {
         stream.getTracks().forEach((track) => track.stop());
       }
     };
-  }, [isUserAgreed]);
-  return (
-    <div className="w-full min-h-svh bg-[#FFEBC8] flex flex-col items-center justify-center overflow-hidden">
+  }, [isUserAgreed]);  return (
+    <div className="w-full min-h-svh bg-[#FFEBC8] flex flex-col items-center justify-center overflow-hidden px-4 sm:px-6 md:px-8">
       <Link to="/">
-        <IoReturnDownBack className="absolute top-10 left-10 cursor-pointer w-10 h-10"/>
+        <IoReturnDownBack className="absolute top-4 sm:top-6 md:top-10 left-4 sm:left-6 md:left-10 cursor-pointer w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10"/>
       </Link>
       <AnimatePresence mode="wait">
         {currentScreen === "nameForm" && (

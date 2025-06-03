@@ -8,5 +8,6 @@ import EducationPage from "./EducationPage";
 import NotFoundPage from "./NotFoundPage";
 import QuizPage from "./QuizPage";
 import MoodPage from "./MoodPage";
+import ChatbotPage from "./ChatbotPage";
 
-export { MoodPage, LandingPage, OverviewPage, LoginPage, RegisterPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage, QuizPage};
+export { MoodPage, LandingPage, OverviewPage, LoginPage, RegisterPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage, QuizPage, ChatbotPage};

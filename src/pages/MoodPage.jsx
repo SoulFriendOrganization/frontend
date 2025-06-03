@@ -1,37 +1,23 @@
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
-import { RenderWebcam, RenderChatbot } from "../components";
+import { RenderWebcam } from "../components";
 import cv from "@techstark/opencv-js";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { IoReturnDownBack } from "react-icons/io5";
 
 window.cv = cv;
 
 function MoodPage() {
+  const navigate = useNavigate();
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [videoError, setVideoError] = useState(null);
   const [imageSent, setImageSent] = useState(false);
   const videoRef = useRef(null);
-  const [userExpression, setUserExpression] = useState("");  const [name, setName] = useState("Teman");
-  const [userId, setUserId] = useState("");
+  const [userExpression, setUserExpression] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
-    const storedName = localStorage.getItem("userName");
-    const storedUserId = localStorage.getItem("userId");
-    
-    if (storedName) {
-      setName(storedName);
-    }
-    
-    if (storedUserId) {
-      setUserId(storedUserId);
-    }
-  }, []);
-
-  const currentScreen = errorMessage ? "error" : (imageSent && userExpression ? "chatbot" : "webcam");
-
+  
+  const currentScreen = errorMessage ? "error" : "webcam";
   useEffect(() => {
     let stream = null;
 
@@ -61,11 +47,18 @@ function MoodPage() {
       }
     };
   }, []);
+  
+  useEffect(() => {
+    if (imageSent && userExpression) {
+      navigate('/chatbot', { state: { userExpression } });
+    }
+  }, [imageSent, userExpression, navigate]);
+
   return (    
   <div className="w-full min-h-svh bg-[#FFEBC8] flex flex-col items-center justify-center overflow-hidden">
       <Link to="/home">
-        <IoReturnDownBack className="absolute top-10 left-10 cursor-pointer w-10 h-10"/>
-      </Link>
+          <IoReturnDownBack className="absolute top-4 sm:top-6 md:top-10 left-4 sm:left-6 md:left-10 cursor-pointer w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10"/>
+      </Link> 
       <AnimatePresence mode="wait">
         {currentScreen === "webcam" && (
           <motion.div
@@ -88,13 +81,6 @@ function MoodPage() {
               setErrorMessage={setErrorMessage}
             />
           </motion.div>
-        )}          {currentScreen === "chatbot" && (
-          <RenderChatbot 
-            name={name}
-            userId={userId}
-            userExpression={userExpression}
-            isTrial={false}
-          />
         )}
         {currentScreen === "error" && (
           <motion.div

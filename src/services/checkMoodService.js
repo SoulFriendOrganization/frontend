@@ -32,8 +32,6 @@ export const checkMoodService = async (
         setUserExpression(response.data.prediction);
         return { success: true };
     } catch (error) {
-        console.log("Mood detection error:", error);
-
         // Handle specific error messages
         if (error.response) {
             if (error.response.status === 401) {

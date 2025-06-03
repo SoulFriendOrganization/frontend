@@ -3,12 +3,10 @@ import { loadDataFile } from "./cvDataFile";
 
 export async function loadHaarFaceModels() {
     try {
-        console.log("=======start downloading Haar-cascade models=======");
         await loadDataFile(
             "haarcascade_frontalface_default.xml",
             "/models/haarcascade_frontalface_default.xml"
         );
-        console.log("=======downloaded Haar-cascade models=======");
     } catch (error) {
         console.error("Error loading Haar cascade models:", error);
     }

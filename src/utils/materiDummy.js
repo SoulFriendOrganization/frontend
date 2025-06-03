@@ -106,40 +106,96 @@ export const courseModules = [
     },
 ];
 
-export const quizQuestion = {
-    questions: [
-        {
-            question:
-                "Which function is used to serialize an object into a JSON string in Javascript?",
-            choices: [
-                "stringify()",
-                "parse()",
-                "convert()",
-                "None of the above",
-            ],
-            correctAnswer: 0,
-        },
-        {
-            question:
-                "Which of the following keywords is used to define a variable in Javascript?",
-            choices: ["var", "let", "var and let", "None of the above"],
-            correctAnswer: 2,
-        },
-        {
-            question:
-                "Which of the following methods can be used to display data in some form using Javascript?",
-            choices: [
-                "document.write()",
-                "console.log()",
-                "window.alert",
-                "All of the above",
-            ],
-            correctAnswer: 3,
-        },
-        {
-            question: "How can a datatype be declared to be a constant type?",
-            choices: ["const", "var", "let", "constant"],
-            correctAnswer: 0,
-        },
-    ],
+export const quizQuestions = {
+    "mental-health": {
+        questions: [
+            {
+                question: "Apa definisi dari kesehatan mental?",
+                choices: [
+                    "Hanya ketiadaan gangguan mental",
+                    "Kondisi sejahtera psikologis, emosional, dan sosial",
+                    "Kemampuan untuk selalu bahagia",
+                    "Kondisi dimana seseorang tidak pernah sedih",
+                ],
+                correctAnswer: 1,
+            },
+            {
+                question: "Faktor apa saja yang mempengaruhi kesehatan mental?",
+                choices: [
+                    "Hanya faktor biologis",
+                    "Hanya faktor psikologis",
+                    "Hanya faktor sosial",
+                    "Kombinasi faktor biologis, psikologis, dan sosial",
+                ],
+                correctAnswer: 3,
+            },
+            {
+                question:
+                    "Manakah yang merupakan tanda perubahan perilaku pada gangguan kesehatan mental?",
+                choices: [
+                    "Lebih banyak bersosialisasi",
+                    "Penarikan diri dari lingkungan sosial",
+                    "Peningkatan kinerja di tempat kerja",
+                    "Lebih aktif dalam berbagai kegiatan",
+                ],
+                correctAnswer: 1,
+            },
+            {
+                question: "Bagaimana cara terbaik menjaga kesehatan mental?",
+                choices: [
+                    "Menghindari semua bentuk stres",
+                    "Menggunakan obat penenang setiap merasa cemas",
+                    "Membangun gaya hidup sehat dan dukungan sosial yang kuat",
+                    "Mengisolasi diri dari masalah",
+                ],
+                correctAnswer: 2,
+            },
+        ],
+    },
+    "judi-online": {
+        questions: [
+            {
+                question: "Apa definisi dari judi online?",
+                choices: [
+                    "Segala bentuk game online",
+                    "Taruhan uang atau barang berharga melalui internet pada hasil yang tidak pasti",
+                    "Bermain game untuk mendapatkan poin virtual",
+                    "Investasi di pasar saham online",
+                ],
+                correctAnswer: 1,
+            },
+            {
+                question:
+                    "Apa mekanisme psikologis utama yang membuat judi online sangat adiktif?",
+                choices: [
+                    "Jadwal penguatan variabel dan pelepasan dopamin",
+                    "Kemudahan akses internet",
+                    "Kualitas grafis yang baik",
+                    "Dukungan dari teman sebaya",
+                ],
+                correctAnswer: 0,
+            },
+            {
+                question: "Apa dampak judi online terhadap kesehatan mental?",
+                choices: [
+                    "Tidak ada dampak signifikan",
+                    "Hanya dampak finansial",
+                    "Dapat menyebabkan gangguan kecemasan, depresi, dan stres kronis",
+                    "Selalu meningkatkan kebahagiaan",
+                ],
+                correctAnswer: 2,
+            },
+            {
+                question:
+                    "Apa strategi efektif untuk mencegah kecanduan judi online?",
+                choices: [
+                    "Bermain hanya pada platform besar",
+                    "Pendidikan, batasan waktu/uang, dan mencari alternatif hiburan sehat",
+                    "Meminjam uang untuk menutup kerugian",
+                    "Bermain kapanpun ada waktu luang",
+                ],
+                correctAnswer: 1,
+            },
+        ],
+    },
 };

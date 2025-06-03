@@ -53,7 +53,6 @@ export const loginService = async (
             true
         );
         Cookies.set("token", response.data.access_token);
-        console.log(response);
         reset();
         navigate("/home");
     } catch (error) {

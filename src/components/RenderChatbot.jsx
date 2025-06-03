@@ -7,7 +7,7 @@ import { FaRegUser } from "react-icons/fa6";
 import { RiRobot2Fill } from "react-icons/ri";
 import { chatbotTrialService, chatbotService } from "../services";
 
-function RenderChatbot({ name, userExpression, isTrial = true, userId = "" }) {
+function RenderChatbot({ name, userExpression, isTrial = true}) {
   const scrollbarStyle = `
     .scrollbar-hide::-webkit-scrollbar {
       width: 5px;
@@ -149,21 +149,20 @@ function RenderChatbot({ name, userExpression, isTrial = true, userId = "" }) {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
-
   return (
-    <div className="flex flex-col items-center p-6 max-w-2xl mx-auto h-full">
+    <div className="flex flex-col items-center p-3 sm:p-4 md:p-6 max-w-xl sm:max-w-2xl mx-auto h-full w-full">
       <style>{scrollbarStyle}</style>
       {!isChatbotOpen ? (
         <>
           <motion.div 
             key="render-chatbot"
-            className="flex flex-col items-center justify-center gap-4 w-full text-center"
+            className="flex flex-col items-center justify-center gap-3 sm:gap-4 w-full text-center px-2"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 50, damping: 15 }}
           >  
             <motion.div
-              className="text-4xl"
+              className="text-2xl sm:text-3xl md:text-4xl"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 100 }}
@@ -172,7 +171,7 @@ function RenderChatbot({ name, userExpression, isTrial = true, userId = "" }) {
             </motion.div>
             
             <motion.div 
-              className="font-medium text-xl text-gray-800 mb-2"
+              className="font-medium text-base sm:text-lg md:text-xl text-gray-800 mb-1 sm:mb-2"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
@@ -186,7 +185,7 @@ function RenderChatbot({ name, userExpression, isTrial = true, userId = "" }) {
           </motion.div>
           
           <motion.button
-            className="px-6 py-2 mt-4 rounded-lg text-white font-medium bg-[#D4A017] hover:bg-[#C09016] transition-colors shadow-sm cursor-pointer"
+            className="px-4 sm:px-5 md:px-6 py-1.5 sm:py-2 mt-3 sm:mt-4 rounded-lg text-white font-medium bg-[#D4A017] hover:bg-[#C09016] transition-colors shadow-sm cursor-pointer text-sm sm:text-base"
             whileTap={{ scale: 0.98 }}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -197,49 +196,47 @@ function RenderChatbot({ name, userExpression, isTrial = true, userId = "" }) {
           </motion.button>
         </>
       ) : (        
-        <div className="flex flex-col h-full w-full">
-          <motion.div 
-            className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-gray-100"
+        <div className="flex flex-col h-full w-full">          <motion.div 
+            className="flex items-center justify-between gap-2 sm:gap-3 mb-3 sm:mb-4 pb-2 sm:pb-3 border-b border-gray-100"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#D4A017] text-xl text-white">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-[#D4A017] text-lg sm:text-xl text-white">
                 {emojiMoodText}
               </div>
-              <div className="font-medium text-gray-800">
+              <div className="font-medium text-gray-800 text-sm sm:text-base">
                 {`${greeting} ${moodMessage} hari ini.`}
               </div>
             </div>            
             <button 
               onClick={() => setIsChatbotOpen(false)}
-              className="text-gray-500 cursor-pointer hover:text-gray-700 bg-gray-100/50 hover:bg-gray-100 rounded-full p-2 transition-colors"
+              className="text-gray-500 cursor-pointer hover:text-gray-700 bg-gray-100/50 hover:bg-gray-100 rounded-full p-1.5 sm:p-2 transition-colors"
             >
-              <IoClose size={18} />
+              <IoClose className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
             </button>
           </motion.div>
           <motion.div 
-            className="flex flex-col flex-grow min-h-[50vh] max-h-[calc(100vh-250px)] border-t border-b border-gray-100 rounded-lg"
+            className="flex flex-col flex-grow min-h-[40vh] sm:min-h-[45vh] md:min-h-[50vh] max-h-[calc(100vh-230px)] sm:max-h-[calc(100vh-240px)] md:max-h-[calc(100vh-250px)] border-t border-b border-gray-100 rounded-lg"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
           >            
-          <div className="flex-grow overflow-y-auto p-4 scrollbar-hide" style={{
+          <div className="flex-grow overflow-y-auto p-2 sm:p-3 md:p-4 scrollbar-hide" style={{
               scrollbarWidth: 'thin',
               scrollbarColor: '#D4A017 transparent',
-            }}>              
-            {chatMessages.map((msg, index) => (
+            }}>              {chatMessages.map((msg, index) => (
                 <div 
                   key={index} 
-                  className={`mb-4 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`mb-3 sm:mb-4 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {msg.sender === 'bot' && (
-                    <div className="w-8 h-8 rounded-full bg-[#D4A017] text-white flex items-center justify-center mr-2 self-end">
-                      <RiRobot2Fill size={18} />
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full bg-[#D4A017] text-white flex items-center justify-center mr-1.5 sm:mr-2 self-end">
+                      <RiRobot2Fill className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-[18px] md:h-[18px]" />
                     </div>
                   )}
                   <div 
-                    className={`max-w-[75%] p-3 ${
+                    className={`max-w-[80%] sm:max-w-[75%] p-2 sm:p-2.5 md:p-3 text-sm sm:text-base ${
                       msg.sender === 'user' 
                         ? 'bg-[#D4A017] text-white rounded-2xl rounded-br-sm shadow-sm' 
                         : 'bg-white/90 text-gray-800 rounded-2xl rounded-bl-sm shadow-sm border border-gray-100'
@@ -248,63 +245,62 @@ function RenderChatbot({ name, userExpression, isTrial = true, userId = "" }) {
                     {msg.message}
                   </div>
                   {msg.sender === 'user' && (
-                    <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center ml-2 self-end">
-                      <FaRegUser size={14} />
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center ml-1.5 sm:ml-2 self-end">
+                      <FaRegUser className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-[14px] md:h-[14px]" />
                     </div>
                   )}
                 </div>
               ))}
               
               {isLoading && (
-                <div className="mb-4 flex justify-start">
-                  <div className="w-8 h-8 rounded-full bg-[#D4A017] text-white flex items-center justify-center mr-2 self-end">
-                    <RiRobot2Fill size={18} />
+                <div className="mb-3 sm:mb-4 flex justify-start">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full bg-[#D4A017] text-white flex items-center justify-center mr-1.5 sm:mr-2 self-end">
+                    <RiRobot2Fill className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-[18px] md:h-[18px]" />
                   </div>
-                  <div className="max-w-[75%] p-3 bg-white/90 text-gray-800 rounded-2xl rounded-bl-sm shadow-sm border border-gray-100">
+                  <div className="max-w-[80%] sm:max-w-[75%] p-2 sm:p-2.5 md:p-3 bg-white/90 text-gray-800 rounded-2xl rounded-bl-sm shadow-sm border border-gray-100">
                     <div className="flex space-x-1">
-                      <div className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
-                      <div className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
-                      <div className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "600ms" }}></div>
+                      <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
+                      <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
+                      <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "600ms" }}></div>
                     </div>
                   </div>
                 </div>
               )}
               <div ref={messagesEndRef} className="h-4"></div>
             </div>
-          </motion.div>          
-          <motion.div 
-            className="mt-4 pt-4 border-t border-gray-100"
+          </motion.div>            <motion.div 
+            className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
             {isTrial && reachedTrialLimit ? (
-              <div className="flex flex-col gap-3">
-                <div className="bg-white/90 text-center p-3 rounded-lg border border-[#D4A017] text-gray-800">
-                  <p className="mb-2">Anda telah mencapai batas percakapan trial.</p>
-                  <p className="font-medium">Untuk melanjutkan percakapan, silakan sign in.</p>
+              <div className="flex flex-col gap-2 sm:gap-3">
+                <div className="bg-white/90 text-center p-2 sm:p-3 rounded-lg border border-[#D4A017] text-gray-800">
+                  <p className="mb-1 sm:mb-2 text-sm sm:text-base">Anda telah mencapai batas percakapan trial.</p>
+                  <p className="font-medium text-sm sm:text-base">Untuk melanjutkan percakapan, silakan sign in.</p>
                 </div>
-                <a href="/login" className="text-center py-3 bg-[#D4A017] text-white rounded-lg hover:bg-[#C09016] transition-colors shadow-sm font-medium cursor-pointer">
+                <a href="/login" className="text-center py-2 sm:py-3 bg-[#D4A017] text-white rounded-lg hover:bg-[#C09016] transition-colors shadow-sm font-medium cursor-pointer text-sm sm:text-base">
                   Sign In
                 </a>
               </div>
             ) : (
-              <div className="flex items-center gap-3">                
+              <div className="flex items-center gap-2 sm:gap-3">                
               <input
                   type="text"
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyDown={handleKeyPress}
                   placeholder={isLoading ? "Menunggu respons..." : "Ketik pesanmu di sini..."}
-                  className={`flex-grow p-3 pl-4 ${isLoading ? 'bg-gray-100 text-gray-500' : 'bg-gray-100/50'} border-none rounded-full focus:outline-none focus:ring-1 focus:ring-[#D4A017] focus:bg-gray-100/80 transition-all`}
+                  className={`flex-grow p-2 sm:p-3 pl-3 sm:pl-4 text-sm sm:text-base ${isLoading ? 'bg-gray-100 text-gray-500' : 'bg-gray-100/50'} border-none rounded-full focus:outline-none focus:ring-1 focus:ring-[#D4A017] focus:bg-gray-100/80 transition-all`}
                   disabled={(isTrial && reachedTrialLimit) || isLoading}
                 />                
                 <button
                   onClick={handleSendMessage}
-                  className={`p-3 ${(isTrial && reachedTrialLimit) || isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#D4A017] hover:bg-[#C09016] cursor-pointer'} text-white rounded-full transition-colors shadow-sm`}
+                  className={`p-2 sm:p-3 ${(isTrial && reachedTrialLimit) || isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#D4A017] hover:bg-[#C09016] cursor-pointer'} text-white rounded-full transition-colors shadow-sm`}
                   disabled={(isTrial && reachedTrialLimit) || isLoading}
                 >
-                  <IoSend size={18} />
+                  <IoSend className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                 </button>
               </div>
             )}

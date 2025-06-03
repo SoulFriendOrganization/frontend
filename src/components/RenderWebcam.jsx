@@ -107,7 +107,6 @@ function RenderWebcam({
         const tracks = stream.getTracks();
         tracks.forEach(track => {
           track.stop();
-          console.log('Camera track stopped successfully:', track.kind);
         });
         videoRef.current.srcObject = null;
       }
@@ -121,24 +120,23 @@ function RenderWebcam({
       stopCamera();
     };
   }, [imageSent, videoRef]);
-
   return (
     <motion.div
       key="webcam"
-      className="flex flex-col items-center justify-center gap-6 p-8"
+      className="flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-6 md:p-8 w-full"
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 50, damping: 15 }}
     >
-      <motion.div className="w-2xl h-xl rounded-lg overflow-hidden relative">
+      <motion.div className="w-full max-w-md sm:max-w-lg md:max-w-xl h-[250px] sm:h-[300px] md:h-[350px] rounded-lg overflow-hidden relative">
         {isVideoLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-slate-100/80 z-10">
-            <div className="w-8 h-8 border-4 border-[#D4A017] border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-6 h-6 sm:w-8 sm:h-8 border-3 sm:border-4 border-[#D4A017] border-t-transparent rounded-full animate-spin"></div>
           </div>
         )}
         {videoError && (
           <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
-            <p className="text-red-500">{videoError}</p>
+            <p className="text-red-500 text-sm sm:text-base">{videoError}</p>
           </div>
         )}
         {!imageSent && (

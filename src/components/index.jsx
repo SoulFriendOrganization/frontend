@@ -5,6 +5,9 @@ import RenderUserAgreement from "./RenderUserAgreement";
 import RenderWebcam from "./RenderWebcam";
 import StreamText from "./StreamText";
 import RenderChatbot from "./RenderChatbot";
+import RenderQuizSelection from "./RenderQuizSelection";
+import RenderQuizPreview from "./RenderQuizPreview";
+import RenderQuizResults from "./RenderQuizResults";
 
 export {
   Footer,
@@ -13,5 +16,8 @@ export {
   RenderUserAgreement,
   RenderWebcam,
   StreamText,
-  RenderChatbot
+  RenderChatbot,
+  RenderQuizSelection,
+  RenderQuizPreview,
+  RenderQuizResults
 };

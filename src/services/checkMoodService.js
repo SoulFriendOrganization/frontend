@@ -1,4 +1,4 @@
-import { POST_DATA } from "../api";
+import { GET_DATA, POST_DATA } from "../api";
 import Cookies from "js-cookie";
 
 export const checkMoodTrialService = async (imageData, setUserExpression) => {
@@ -55,5 +55,15 @@ export const checkMoodService = async (
             "Terjadi kesalahan saat mendeteksi mood. Silakan coba lagi nanti.";
         if (setErrorMessage) setErrorMessage(defaultErrorMsg);
         return { success: false, message: defaultErrorMsg };
+    }
+};
+
+export const getHomeService = async (setData) => {
+    try {
+        const token = Cookies.get("token");
+        const response = await GET_DATA("api/v1/fetch_stat", token);
+        setData(response.data);
+    } catch (error) {
+        console.log(error);
     }
 };

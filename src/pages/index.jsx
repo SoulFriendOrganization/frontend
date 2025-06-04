@@ -9,5 +9,6 @@ import NotFoundPage from "./NotFoundPage";
 import QuizPage from "./QuizPage";
 import MoodPage from "./MoodPage";
 import ChatbotPage from "./ChatbotPage";
+import QuizQuestionPage from "./QuizQuestionPage";
 
-export { MoodPage, LandingPage, OverviewPage, LoginPage, RegisterPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage, QuizPage, ChatbotPage};
+export { MoodPage, LandingPage, OverviewPage, LoginPage, RegisterPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage, QuizPage, ChatbotPage, QuizQuestionPage};

@@ -1,6 +1,19 @@
 import { registerService, loginService } from "./AuthService";
-import { checkMoodTrialService, checkMoodService } from "./checkMoodService";
+import {
+    checkMoodTrialService,
+    checkMoodService,
+    getHomeService,
+} from "./checkMoodService";
 import { chatbotService, chatbotTrialService } from "./chatbotService";
+import {
+    chooseQuizService,
+    getQuizService,
+    submitAnswerService,
+    submitQuizService,
+    checkSessionAttemptQuizService,
+    generateQuizAttemptService,
+    getAnswerUserQuizService,
+} from "./QuizService";
 
 export {
     registerService,
@@ -9,4 +22,12 @@ export {
     checkMoodService,
     chatbotService,
     chatbotTrialService,
+    chooseQuizService,
+    getQuizService,
+    submitAnswerService,
+    submitQuizService,
+    getHomeService,
+    checkSessionAttemptQuizService,
+    generateQuizAttemptService,
+    getAnswerUserQuizService,
 };

@@ -1,8 +1,14 @@
 import axios from "axios";
 
-export const GET_DATA = async (endpoint) => {
+export const GET_DATA = async (endpoint, token) => {
     const response = await axios.get(
-        `${import.meta.env.VITE_BASE_URL_BACKEND}/${endpoint}`
+        `${import.meta.env.VITE_BASE_URL_BACKEND}/${endpoint}`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        }
     );
     return response;
 };
@@ -17,6 +23,21 @@ export const POST_DATA = async (endpoint, data, header, fromUrl = false) => {
     }
 
     const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL_BACKEND}/${endpoint}`,
+        data,
+        header
+            ? header
+            : {
+                  headers: {
+                      "Content-Type": "application/json",
+                  },
+              }
+    );
+    return response;
+};
+
+export const PUT_DATA = async (endpoint, data, header) => {
+    const response = await axios.put(
         `${import.meta.env.VITE_BASE_URL_BACKEND}/${endpoint}`,
         data,
         header

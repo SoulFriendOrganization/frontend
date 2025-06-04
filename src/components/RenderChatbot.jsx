@@ -196,7 +196,8 @@ function RenderChatbot({ name, userExpression, isTrial = true}) {
           </motion.button>
         </>
       ) : (        
-        <div className="flex flex-col h-full w-full">          <motion.div 
+        <div className="flex flex-col h-full w-full">          
+        <motion.div 
             className="flex items-center justify-between gap-2 sm:gap-3 mb-3 sm:mb-4 pb-2 sm:pb-3 border-b border-gray-100"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}

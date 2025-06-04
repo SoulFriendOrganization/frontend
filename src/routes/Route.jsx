@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router";
-import { MoodPage, LandingPage, OverviewPage, RegisterPage, LoginPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage, QuizPage, ChatbotPage, QuizQuestionPage } from "../pages";
+import { ErrorPage, MoodPage, LandingPage, OverviewPage, RegisterPage, LoginPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage, QuizPage, ChatbotPage, QuizQuestionPage } from "../pages";
 import { PrivateRoute, PublicRoute } from "./ProtectedRoutes";
 
 const Routers = () => {
@@ -24,6 +24,7 @@ const Routers = () => {
                 </Route>
                 
                 <Route path="*" element={<NotFoundPage />} />
+                <Route path="/error" element={<ErrorPage />} />
             </Routes>
         </BrowserRouter>
     );

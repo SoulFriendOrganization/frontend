@@ -1,7 +1,14 @@
 import { Link, useParams, useNavigate, Navigate } from "react-router";
 import { FaQuestion, FaSpinner, FaInfoCircle, FaCheckCircle, FaRegCircle, FaCheckSquare, FaRegSquare } from 'react-icons/fa';
 import { IoReturnDownBack } from "react-icons/io5";
-import { submitAnswerService, submitQuizService } from "../services";
+import { useEffect } from 'react';
+import { 
+  submitAnswerService, 
+  submitQuizService, 
+  checkSessionAttemptQuizService,
+  getAnswerUserQuizService,
+  generateQuizAttemptService 
+} from "../services";
 import {useQuizStore} from "../utils";
 
 function QuizQuestionPage() {
@@ -19,6 +26,61 @@ function QuizQuestionPage() {
   const setQuizResults = useQuizStore(state => state.setQuizResults);
   const isSubmittingQuiz = useQuizStore(state => state.isSubmittingQuiz);
   const setIsSubmittingQuiz = useQuizStore(state => state.setIsSubmittingQuiz);
+  const setQuizQuestions = useQuizStore(state => state.setQuizQuestions);
+  const updateUserAnswer = useQuizStore(state => state.updateUserAnswer);
+
+  // Check for existing quiz session on component mount
+  useEffect(() => {
+    if (!quiz_attempt_id) {
+      checkSessionAttemptQuizService(setQuizQuestions);
+    }
+  }, [setQuizQuestions, quiz_attempt_id]);
+
+  // Generate quiz questions if needed
+  useEffect(() => {
+    const fetchQuizQuestions = async () => {
+      if (quiz_attempt_id && (!quizQuestions || !quizQuestions.questions)) {
+        try {
+          const data = await generateQuizAttemptService(quiz_attempt_id, setQuizQuestions);
+          console.log("Generated quiz questions:", data);
+        } catch (error) {
+          console.error("Error generating quiz questions:", error);
+        }
+      }
+    };
+    
+    fetchQuizQuestions();
+  }, [quiz_attempt_id, quizQuestions, setQuizQuestions]);
+  // Fetch user's saved answers for the current question
+  useEffect(() => {
+    const fetchUserAnswers = async () => {
+      if (quiz_attempt_id && quizQuestions && quizQuestions.questions) {
+        const currentQuestion = getCurrentQuestion();
+        if (currentQuestion) {
+          try {
+            getAnswerUserQuizService(
+              quiz_attempt_id, 
+              currentQuestion.question_id,
+              (answerData) => {
+                if (answerData && answerData.user_answer) {
+                  updateUserAnswer(
+                    currentQuestion.question_id, 
+                    currentQuestion.question_type === "multiple_answer" 
+                      ? answerData.user_answer 
+                      : answerData.user_answer[0]
+                  );
+                }
+              }
+            );
+          } catch (error) {
+            console.error("Error fetching user answers:", error);
+          }
+        }
+      }
+    };
+    
+    fetchUserAnswers();
+  }, [quiz_attempt_id, currentQuestionIndex, quizQuestions, updateUserAnswer, getCurrentQuestion]);
 
   const handleSelectAnswer = (questionId, answer) => {
     if (isSubmittingAnswer) return;

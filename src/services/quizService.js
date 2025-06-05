@@ -24,18 +24,16 @@ export const chooseQuizService = async (
                 },
             }
         );
-        if (setQuizId) setQuizId(response.data.quiz_id);
-        if (setQuizData) {
-            setQuizData({
-                title: response.data.title,
-                description: response.data.description,
-            });
-        }
+        setQuizId(response.data.quiz_id);
+        setQuizData({
+            title: response.data.title,
+            description: response.data.description,
+        });
     } catch (error) {
         console.error(error);
         return null;
     } finally {
-        if (setLoading) setLoading(false);
+        setLoading(false);
     }
 };
 
@@ -61,9 +59,7 @@ export const getQuizService = async (
         setQuizQuestions({
             ...response.data,
         });
-        navigate(
-            `/quiz/${response.data.quiz_attempt_id}/${response.data.questions[0].question_id}`
-        );
+        navigate(`/quiz/${response.data.quiz_attempt_id}`);
     } catch (error) {
         console.error(error);
     } finally {

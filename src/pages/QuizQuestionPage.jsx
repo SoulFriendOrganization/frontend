@@ -10,7 +10,7 @@ import {
 import {useQuizStore} from "../utils";
 
 function QuizQuestionPage() {
-  const { quiz_attempt_id, question_id } = useParams();
+  const { quiz_attempt_id } = useParams();
   const navigate = useNavigate();
   const quizQuestions = useQuizStore(state => state.quizQuestions);
   const isLoadingQuestions = useQuizStore(state => state.isLoadingQuestions);
@@ -27,36 +27,14 @@ function QuizQuestionPage() {
   const setIsSubmittingQuiz = useQuizStore(state => state.setIsSubmittingQuiz);
   const setQuizQuestions = useQuizStore(state => state.setQuizQuestions);
   const updateUserAnswer = useQuizStore(state => state.updateUserAnswer);
-
-  const getQuestionIndexById = useCallback((id) => {
-    if (!quizQuestions || !quizQuestions.questions) return 0;
-    const index = quizQuestions.questions.findIndex(q => q.question_id === id);
-    return index >= 0 ? index : 0;
-  }, [quizQuestions]);
   
   const getCurrentQuestion = useCallback(() => {
     if (!quizQuestions || !quizQuestions.questions || quizQuestions.questions.length === 0) {
       return null;
     }
-
-    if (question_id) {
-      const questionById = quizQuestions.questions.find(q => q.question_id === question_id);
-      if (questionById) {
-        return questionById;
-      }
-    }
     
     return quizQuestions.questions[currentQuestionIndex];
-  }, [quizQuestions, question_id, currentQuestionIndex]);
-
-  useEffect(() => {
-    if (question_id && quizQuestions && quizQuestions.questions) {
-      const index = getQuestionIndexById(question_id);
-      if (index !== currentQuestionIndex) {
-        setCurrentQuestionIndex(index);
-      }
-    }
-  }, [question_id, quizQuestions, currentQuestionIndex, setCurrentQuestionIndex, getQuestionIndexById]);
+  }, [quizQuestions, currentQuestionIndex]);
 
   useEffect(() => {
     const fetchQuizQuestions = async () => {
@@ -108,7 +86,7 @@ function QuizQuestionPage() {
     };
     
     fetchUserAnswers();
-  }, [quiz_attempt_id, question_id, quizQuestions, getCurrentQuestion, updateUserAnswer]);
+  }, [quiz_attempt_id, currentQuestionIndex, quizQuestions, getCurrentQuestion, updateUserAnswer]);
 
   const handleSelectAnswer = (questionId, answer) => {
     if (isSubmittingAnswer) return;
@@ -190,20 +168,16 @@ function QuizQuestionPage() {
     
     await submitCurrentQuestionAnswers();
     
-    const currentIndex = getQuestionIndexById(question_id);
-    if (currentIndex < quizQuestions.questions.length - 1) {
-      const nextQuestionId = quizQuestions.questions[currentIndex + 1].question_id;
-      navigate(`/quiz/${quiz_attempt_id}/${nextQuestionId}`);
+    if (currentQuestionIndex < quizQuestions.questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
 
   const handlePrevQuestion = () => {
     if (!quizQuestions || !quizQuestions.questions) return;
     
-    const currentIndex = getQuestionIndexById(question_id);
-    if (currentIndex > 0) {
-      const prevQuestionId = quizQuestions.questions[currentIndex - 1].question_id;
-      navigate(`/quiz/${quiz_attempt_id}/${prevQuestionId}`);
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
 
@@ -244,7 +218,6 @@ function QuizQuestionPage() {
   }
 
   const currentQuestion = getCurrentQuestion();
-  const currentIndex = getQuestionIndexById(question_id);
 
   return (    
   <div className="min-h-svh bg-gradient-to-b from-[#FFEBC8]/70 to-amber-50 py-10 px-4 sm:px-6 flex items-center justify-center">
@@ -255,7 +228,7 @@ function QuizQuestionPage() {
         <div className="bg-white rounded-xl shadow-md overflow-hidden border border-amber-100">
           <div className="bg-gradient-to-r from-[#FFEBB3] to-amber-100 py-4 px-6 border-b border-[#D4A017]/40 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
             <h3 className="text-xl font-bold text-amber-800">
-              Pertanyaan {currentIndex + 1} dari {quizQuestions?.questions?.length || 0}
+              Pertanyaan {currentQuestionIndex + 1} dari {quizQuestions?.questions?.length || 0}
             </h3>
             <div className="flex items-center text-amber-700 text-sm font-medium bg-white/60 py-1 px-3 rounded-full">
               <FaInfoCircle className="mr-2 text-[#D4A017]" />
@@ -365,9 +338,9 @@ function QuizQuestionPage() {
                 <div className="flex justify-between mt-10">
                   <button
                     onClick={handlePrevQuestion}
-                    disabled={currentIndex === 0 || isSubmittingAnswer}
+                    disabled={currentQuestionIndex === 0 || isSubmittingAnswer}
                     className={`px-5 py-2.5 rounded-lg font-medium transition-all cursor-pointer
-                      ${currentIndex === 0 || isSubmittingAnswer
+                      ${currentQuestionIndex === 0 || isSubmittingAnswer
                         ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
                         : 'bg-white text-amber-800 border-2 border-amber-300 shadow hover:bg-amber-50 hover:shadow-md'
                       }`}
@@ -375,7 +348,7 @@ function QuizQuestionPage() {
                     Sebelumnya
                   </button>
                   
-                  {currentIndex < quizQuestions?.questions?.length - 1 ? (
+                  {currentQuestionIndex < quizQuestions?.questions?.length - 1 ? (
                     <button
                       onClick={handleNextQuestion}
                       disabled={isSubmittingAnswer}
@@ -427,7 +400,7 @@ function QuizQuestionPage() {
                       <div 
                         key={index}
                         className={`w-2.5 h-2.5 rounded-full ${
-                          index === currentIndex
+                          index === currentQuestionIndex
                             ? 'bg-[#D4A017]' 
                             : 'bg-amber-200'
                         }`}

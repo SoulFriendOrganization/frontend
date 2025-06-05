@@ -75,12 +75,15 @@ export const checkMoodService = async (
     }
 };
 
-export const getHomeService = async (setData) => {
+export const getHomeService = async (setData, setLoading) => {
     try {
+        setLoading(true);
         const token = Cookies.get("token");
         const response = await GET_DATA("api/v1/fetch_stat", token);
         setData(response.data);
     } catch (error) {
         console.log(error);
+    } finally {
+        setLoading(false);
     }
 };

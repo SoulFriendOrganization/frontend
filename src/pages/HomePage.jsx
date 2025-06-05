@@ -28,17 +28,7 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await getHomeService(setUserData);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching user data:", err);
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    getHomeService(setUserData, setLoading);
   }, []);
 
   const chartData = {
@@ -82,6 +72,18 @@ function HomePage() {
     }
   };
 
+  if(loading ) {
+    return (
+      <div className="w-full min-h-svh flex flex-col items-center justify-center bg-[#FFEBC8]">
+        <div className="flex flex-col items-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FFE2A8] mb-6"></div>
+          <h1 className="text-center text-xl sm:text-2xl font-bold text-[#D4A017]">Memuat data...</h1>
+          <p className="text-center text-gray-600 mt-2">Mohon tunggu sebentar</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="w-full min-h-svh bg-[#FFEBC8] flex flex-col items-center">
         <div className="w-full flex items-center justify-center px-4 py-8 sm:py-12 md:py-16">
@@ -101,7 +103,7 @@ function HomePage() {
                             <TbAward className="w-7 sm:w-8 md:w-9 h-7 sm:h-8 md:h-9 text-[#D4A017]" />
                         </div>
                         <h3 className="font-semibold text-gray-600 mb-1 text-center">Poin Terkumpul</h3>
-                        <p className="text-xl sm:text-2xl font-bold text-[#D4A017]">{userData.point_earned}</p>
+                        <p className="text-xl sm:text-2xl font-bold text-[#D4A017]">{userData.point_earned || 0}</p>
                     </div>
                     
                     <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 md:p-8 flex flex-col items-center w-full lg:max-w-xs sm:col-span-2 lg:col-span-1">
@@ -109,7 +111,7 @@ function HomePage() {
                             <TbChartBar className="w-7 sm:w-8 md:w-9 h-7 sm:h-8 md:h-9 text-[#D4A017]" />
                         </div>
                         <h3 className="font-semibold text-gray-600 mb-1 text-center">Skor Quiz</h3>
-                        <p className="text-xl sm:text-2xl font-bold text-[#D4A017]">{userData.score}</p>
+                        <p className="text-xl sm:text-2xl font-bold text-[#D4A017]">{userData.score || 0}</p>
                     </div>
                 </div>                
                 <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 md:p-8 w-full">
@@ -134,7 +136,7 @@ function HomePage() {
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>
         <div className="px-4 flex flex-col items-center justify-center w-full max-w-7xl mx-auto py-8 sm:py-12 md:py-16">
             {userData.today_mood ? (
                 <div className="mb-8 sm:mb-12 flex flex-col items-center justify-center py-6 sm:py-8 px-4 sm:px-8 md:px-12 rounded-lg bg-white/50 shadow-sm w-full">

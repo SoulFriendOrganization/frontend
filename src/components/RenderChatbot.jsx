@@ -77,7 +77,8 @@ function RenderChatbot({ name = false, userExpression = false, isTrial = true}) 
   const generalEmoji = "👋";
   const emojiMoodText = userExpression ? moodEmoji[userExpression] : generalEmoji;
   
-  const [inputMessage, setInputMessage] = useState("");  const [chatMessages, setChatMessages] = useState(
+  const [inputMessage, setInputMessage] = useState("");  
+  const [chatMessages, setChatMessages] = useState(
     userExpression ? [
       { sender: "bot", message: "Halo! Apa yang ingin kamu diskusikan hari ini?" },
       { sender: "user", message: "Aku ingin berbicara tentang perasaanku" },
@@ -116,14 +117,16 @@ function RenderChatbot({ name = false, userExpression = false, isTrial = true}) 
     
     try {
       let result
-      isTrial ? result = chatbotTrialService(
+      isTrial ? result = await chatbotTrialService(
         name, 
         userMessage, 
         chatMessages,
-        userExpression) : result = chatbotService(
+        userExpression) : result = await chatbotService(
           userMessage,
-          chatMessages
+          chatMessages,
         )
+      
+      console.log(result);
       
       setChatMessages(prev => [...prev, { 
         sender: "bot", 
@@ -159,6 +162,7 @@ function RenderChatbot({ name = false, userExpression = false, isTrial = true}) 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
+
   return (
     <div className="flex flex-col items-center p-3 sm:p-4 md:p-6 max-w-xl sm:max-w-2xl mx-auto h-full w-full">
       <style>{scrollbarStyle}</style>
@@ -234,7 +238,8 @@ function RenderChatbot({ name = false, userExpression = false, isTrial = true}) 
           <div className="flex-grow overflow-y-auto p-2 sm:p-3 md:p-4 scrollbar-hide" style={{
               scrollbarWidth: 'thin',
               scrollbarColor: '#D4A017 transparent',
-            }}>              {chatMessages.map((msg, index) => (
+            }}>              
+            {chatMessages.map((msg, index) => (
                 <div 
                   key={index} 
                   className={`mb-3 sm:mb-4 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}

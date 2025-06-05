@@ -1,9 +1,10 @@
 import { Link } from "react-router";
 import { RenderChatbot } from "../components";
 import { IoReturnDownBack } from "react-icons/io5";
+import useMoodStore from "../utils/moodStore";
 
 function ChatbotPage() {
-  const userExpression = "neutral";
+  const userExpression = useMoodStore((state) => state.userExpression) || "neutral";
   const name = "User";
 
   return (

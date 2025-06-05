@@ -7,7 +7,7 @@ function RenderNameForm({handleSubmit, setName, name}) {
     return (
     <motion.form 
       key="name-form"
-      className="flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-6 md:p-8 w-full max-w-md"
+      className="flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-6 md:p-8 w-full max-w-2xl"
       initial={{ opacity: 0, x: -100 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 100 }}

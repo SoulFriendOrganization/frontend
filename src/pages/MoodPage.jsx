@@ -5,6 +5,7 @@ import { RenderWebcam } from "../components";
 import cv from "@techstark/opencv-js";
 import { Link, useNavigate } from "react-router";
 import { IoReturnDownBack } from "react-icons/io5";
+import useMoodStore from "../utils/moodStore";
 
 window.cv = cv;
 
@@ -16,6 +17,7 @@ function MoodPage() {
   const videoRef = useRef(null);
   const [userExpression, setUserExpression] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const setGlobalUserExpression = useMoodStore((state) => state.setUserExpression);
   
   const currentScreen = errorMessage ? "error" : "webcam";
   useEffect(() => {
@@ -46,11 +48,10 @@ function MoodPage() {
         stream.getTracks().forEach((track) => track.stop());
       }
     };
-  }, []);
-  
-  useEffect(() => {
+  }, []);    useEffect(() => {
     if (imageSent && userExpression) {
-      navigate('/chatbot', { state: { userExpression } });
+      // The global state is now set in the RenderWebcam component
+      navigate('/chatbot');
     }
   }, [imageSent, userExpression, navigate]);
 
@@ -69,8 +70,7 @@ function MoodPage() {
             className="flex flex-col items-center justify-center gap-4 p-4"
           >
             <h2 className="text-2xl font-bold text-[#D4A017] mb-2">Deteksi Mood</h2>
-            <p className="text-center mb-4">Silakan lihat ke kamera untuk mendeteksi mood Anda</p>
-            <RenderWebcam
+            <p className="text-center mb-4">Silakan lihat ke kamera untuk mendeteksi mood Anda</p>            <RenderWebcam
               isVideoLoading={isVideoLoading}
               videoError={videoError}
               videoRef={videoRef}
@@ -79,6 +79,7 @@ function MoodPage() {
               setUserExpression={setUserExpression}
               pageType="mood"
               setErrorMessage={setErrorMessage}
+              setGlobalUserExpression={setGlobalUserExpression}
             />
           </motion.div>
         )}

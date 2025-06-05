@@ -15,21 +15,21 @@ function RenderWebcam({
   setImageSent, 
   setUserExpression,
   pageType = "overview",
-  setErrorMessage
+  setErrorMessage,
+  setGlobalUserExpression = null
 }) {
   const [faceDetectedFrameCount, setFaceDetectedFrameCount] = useState(0);
 
   useEffect(() => {
     loadHaarFaceModels();
   }, []);
-  
-  const sendImageToBackend = useCallback(async (imageData) => {
+    const sendImageToBackend = useCallback(async (imageData) => {
     if (pageType === "mood") {
-      await checkMoodService(imageData, setUserExpression, setErrorMessage);
+      await checkMoodService(imageData, setUserExpression, setErrorMessage, setGlobalUserExpression);
     } else {
-      await checkMoodTrialService(imageData, setUserExpression);
+      await checkMoodTrialService(imageData, setUserExpression, setGlobalUserExpression);
     }
-  }, [pageType, setUserExpression, setErrorMessage]);
+  }, [pageType, setUserExpression, setErrorMessage, setGlobalUserExpression]);
 
   const processFrame = useCallback(() => {
     if (

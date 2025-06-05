@@ -7,7 +7,7 @@ function RenderUserAgreement({name, setIsUserAgreed}) {
     return (  
     <motion.div 
       key="agreement-form"
-      className="flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-6 md:p-8 w-full max-w-md mx-auto"
+      className="flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-6 md:p-8 w-full max-w-2xl mx-auto"
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 50, damping: 15 }}

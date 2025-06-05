@@ -1,12 +1,21 @@
 import { GET_DATA, POST_DATA } from "../api";
 import Cookies from "js-cookie";
 
-export const checkMoodTrialService = async (imageData, setUserExpression) => {
+export const checkMoodTrialService = async (
+    imageData,
+    setUserExpression,
+    setGlobalUserExpression = null
+) => {
     try {
         const response = await POST_DATA("api/v1/mood/face-detection/trial", {
             image: imageData,
         });
-        setUserExpression(response.data.prediction);
+        const prediction = response.data.prediction;
+        setUserExpression(prediction);
+
+        if (setGlobalUserExpression) {
+            setGlobalUserExpression(prediction);
+        }
     } catch (error) {
         console.log(error);
     }
@@ -15,7 +24,8 @@ export const checkMoodTrialService = async (imageData, setUserExpression) => {
 export const checkMoodService = async (
     imageData,
     setUserExpression,
-    setErrorMessage
+    setErrorMessage,
+    setGlobalUserExpression = null
 ) => {
     try {
         const token = Cookies.get("token");
@@ -29,7 +39,14 @@ export const checkMoodService = async (
             { image: imageData },
             { headers }
         );
-        setUserExpression(response.data.prediction);
+        const prediction = response.data.prediction;
+        setUserExpression(prediction);
+
+        // If global setter is provided, also update the global state
+        if (setGlobalUserExpression) {
+            setGlobalUserExpression(prediction);
+        }
+
         return { success: true };
     } catch (error) {
         // Handle specific error messages

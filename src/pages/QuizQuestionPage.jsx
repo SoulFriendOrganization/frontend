@@ -1,13 +1,143 @@
 import { useParams, useNavigate } from "react-router";
-import { FaQuestion, FaSpinner, FaInfoCircle, FaCheckCircle, FaRegCircle, FaCheckSquare, FaRegSquare } from 'react-icons/fa';
-import { useEffect, useCallback } from 'react';
+import { FaQuestion, FaSpinner, FaCheckCircle, FaRegCircle, FaCheckSquare, FaRegSquare, FaClock } from 'react-icons/fa';
+import { useEffect, useCallback, useState } from 'react';
 import { 
   submitAnswerService, 
   submitQuizService, 
   getAnswerUserQuizService,
   generateQuizAttemptService 
 } from "../services";
-import {useQuizStore} from "../utils";
+import { useQuizStore } from "../utils";
+
+const QuizTimer = ({ expiryTime, onExpire }) => {
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0, expired: false });
+  
+  useEffect(() => {
+    if (!expiryTime) return;
+    
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const expiry = new Date(expiryTime);
+      const difference = expiry - now;
+      
+      if (difference <= 0) {
+        return { hours: 0, minutes: 0, seconds: 0, expired: true };
+      }
+      
+      const hours = Math.floor(difference / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      
+      return { hours, minutes, seconds, expired: false };
+    };
+    
+    setTimeLeft(calculateTimeLeft());
+    
+    const timer = setInterval(() => {
+      const timeRemaining = calculateTimeLeft();
+      setTimeLeft(timeRemaining);
+      
+      if (timeRemaining.expired) {
+        clearInterval(timer);
+        if (onExpire && typeof onExpire === 'function') {
+          onExpire();
+        }
+      }
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, [expiryTime, onExpire]);
+  
+  if (!expiryTime) return <span>Tidak ada batas waktu</span>;
+  
+  if (timeLeft.expired) {
+    return (
+      <span className="text-red-600 font-bold animate-pulse">Waktu habis!</span>
+    );
+  }
+  
+  const isLowTime = timeLeft.hours === 0 && timeLeft.minutes < 5;
+  const isCriticalTime = timeLeft.hours === 0 && timeLeft.minutes < 2;
+  
+  return (
+    <span className={`font-medium ${
+      isCriticalTime 
+        ? 'text-red-600 animate-pulse font-bold' 
+        : isLowTime 
+          ? 'text-red-600' 
+          : ''
+    }`}>
+      {timeLeft.hours.toString().padStart(2, '0')}:
+      {timeLeft.minutes.toString().padStart(2, '0')}:
+      {timeLeft.seconds.toString().padStart(2, '0')}
+    </span>
+  );
+};
+
+const TimerDisplay = ({ expiryTime, onExpire }) => {
+  const [timeState, setTimeState] = useState({ 
+    isLow: false, 
+    isCritical: false, 
+    isExpired: false 
+  });
+  
+  useEffect(() => {
+    if (!expiryTime) return;
+    
+    const checkTimeState = () => {
+      const now = new Date();
+      const expiry = new Date(expiryTime);
+      const difference = expiry - now;
+      
+      if (difference <= 0) {
+        if (onExpire && typeof onExpire === 'function' && !timeState.isExpired) {
+          onExpire();
+        }
+        return { isLow: false, isCritical: false, isExpired: true };
+      }
+      
+      const minutesLeft = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const hoursLeft = Math.floor(difference / (1000 * 60 * 60));
+      
+      return { 
+        isLow: hoursLeft === 0 && minutesLeft < 5, 
+        isCritical: hoursLeft === 0 && minutesLeft < 2,
+        isExpired: false
+      };
+    };
+    
+    setTimeState(checkTimeState());
+    
+    const interval = setInterval(() => {
+      setTimeState(checkTimeState());
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [expiryTime, onExpire, timeState.isExpired]);
+  
+  const getBgColor = () => {
+    if (timeState.isExpired) return 'bg-red-100';
+    if (timeState.isCritical) return 'bg-red-100';
+    if (timeState.isLow) return 'bg-amber-100';
+    return 'bg-white/60';
+  };
+  
+  const getIcon = () => {
+    if (timeState.isExpired || timeState.isCritical) {
+      return <FaClock className={`mr-2 ${timeState.isCritical ? 'text-red-600 animate-pulse' : 'text-red-600'}`} />;
+    }
+    return <FaClock className="mr-2 text-[#D4A017]" />;
+  };
+    return (
+    <div className={`flex items-center text-sm font-medium ${getBgColor()} py-1 px-3 rounded-full ${timeState.isCritical ? 'border border-red-300' : ''}`}>
+      {getIcon()}
+      <span className="flex items-center">
+        <span className="mr-1">Sisa Waktu:</span>
+        <QuizTimer expiryTime={expiryTime} onExpire={onExpire} />
+      </span>
+    </div>
+  );
+};
 
 function QuizQuestionPage() {
   const { quiz_attempt_id } = useParams();
@@ -27,14 +157,89 @@ function QuizQuestionPage() {
   const setIsSubmittingQuiz = useQuizStore(state => state.setIsSubmittingQuiz);
   const setQuizQuestions = useQuizStore(state => state.setQuizQuestions);
   const updateUserAnswer = useQuizStore(state => state.updateUserAnswer);
-  
+
   const getCurrentQuestion = useCallback(() => {
     if (!quizQuestions || !quizQuestions.questions || quizQuestions.questions.length === 0) {
       return null;
     }
-    
     return quizQuestions.questions[currentQuestionIndex];
   }, [quizQuestions, currentQuestionIndex]);
+
+  const submitCurrentQuestionAnswers = useCallback(async () => {
+    const currentQuestion = getCurrentQuestion();
+    if (!currentQuestion || !quiz_attempt_id) return;
+    
+    const questionId = currentQuestion.question_id;
+    const userAnswer = userAnswers[questionId];
+    
+    if (!userAnswer || (Array.isArray(userAnswer) && userAnswer.length === 0)) {
+      return;
+    }
+
+    setIsSubmittingAnswer(true);
+      
+    try {
+      if (currentQuestion.question_type === "multiple_choice") {
+        setLoadingAnswerFor(userAnswer);
+      } else {
+        setLoadingAnswerFor("submitting");
+      }
+      
+      await submitAnswerService(
+        quiz_attempt_id,
+        questionId,
+        userAnswer,
+        (isLoading) => {
+          setIsSubmittingAnswer(isLoading);
+          if (!isLoading) {
+            setLoadingAnswerFor(null);
+          }
+        }
+      );
+    } catch (error) {
+      console.error("Error submitting answer:", error);
+      setIsSubmittingAnswer(false);
+      setLoadingAnswerFor(null);
+    }
+  }, [getCurrentQuestion, quiz_attempt_id, userAnswers, setIsSubmittingAnswer, setLoadingAnswerFor]);
+
+  const handleSubmitQuiz = useCallback(async () => {
+    try {
+      await submitCurrentQuestionAnswers();
+      setIsSubmittingQuiz(true);
+      
+      if (quiz_attempt_id) {
+        await submitQuizService(
+          quiz_attempt_id,
+          setIsSubmittingQuiz,
+          setQuizResults,
+          navigate
+        );        
+      }
+    } catch (error) {
+      console.error("Error submitting quiz:", error);
+      setIsSubmittingQuiz(false);
+    }
+  }, [quiz_attempt_id, submitCurrentQuestionAnswers, setIsSubmittingQuiz, setQuizResults, navigate]);
+
+  useEffect(() => {
+    if (!quizQuestions?.expired_at) return;
+    
+    const expiry = new Date(quizQuestions.expired_at);
+    const now = new Date();
+    const timeUntilExpiry = expiry - now;
+    
+    if (timeUntilExpiry <= 0) {
+      handleSubmitQuiz();
+      return;
+    }
+    
+    const timeoutId = setTimeout(() => {
+      handleSubmitQuiz();
+    }, timeUntilExpiry);
+    
+    return () => clearTimeout(timeoutId);
+  }, [quizQuestions?.expired_at, handleSubmitQuiz]);
 
   useEffect(() => {
     const fetchQuizQuestions = async () => {
@@ -124,44 +329,6 @@ function QuizQuestionPage() {
   const isAnswerLoading = (answer) => {
     return isSubmittingAnswer && loadingAnswerFor === answer;
   };
-  
-  const submitCurrentQuestionAnswers = async () => {
-    const currentQuestion = getCurrentQuestion();
-    if (!currentQuestion || !quiz_attempt_id) return;
-    
-    const questionId = currentQuestion.question_id;
-    const userAnswer = userAnswers[questionId];
-    
-    if (!userAnswer || (Array.isArray(userAnswer) && userAnswer.length === 0)) {
-      return;
-    }
-
-    setIsSubmittingAnswer(true);
-      
-    try {
-      if (currentQuestion.question_type === "multiple_choice") {
-        setLoadingAnswerFor(userAnswer);
-      } else {
-        setLoadingAnswerFor("submitting");
-      }
-      
-      await submitAnswerService(
-        quiz_attempt_id,
-        questionId,
-        userAnswer,
-        (isLoading) => {
-          setIsSubmittingAnswer(isLoading);
-          if (!isLoading) {
-            setLoadingAnswerFor(null);
-          }
-        }
-      );
-    } catch (error) {
-      console.error("Error submitting answer:", error);
-      setIsSubmittingAnswer(false);
-      setLoadingAnswerFor(null);
-    }
-  };
 
   const handleNextQuestion = async () => {
     if (!quizQuestions || !quizQuestions.questions) return;
@@ -181,26 +348,6 @@ function QuizQuestionPage() {
     }
   };
 
-  const handleSubmitQuiz = async () => {
-    try {
-      await submitCurrentQuestionAnswers();
-      setIsSubmittingQuiz(true);
-      
-      if (quiz_attempt_id) {
-        await submitQuizService(
-          quiz_attempt_id,
-          setIsSubmittingQuiz,
-          setQuizResults,
-          navigate
-        );        
-      }
-    } catch (error) {
-      console.error("Error submitting quiz:", error);
-      setIsSubmittingQuiz(false);
-    }
-  };
-  
-  // Show loading indicator
   if (isLoadingQuestions) {
     return (
       <div className="min-h-svh bg-gradient-to-b from-[#FFEBC8]/80 to-amber-50 py-10 px-4 flex items-center justify-center">
@@ -220,20 +367,14 @@ function QuizQuestionPage() {
   const currentQuestion = getCurrentQuestion();
 
   return (    
-  <div className="min-h-svh bg-gradient-to-b from-[#FFEBC8]/70 to-amber-50 py-10 px-4 sm:px-6 flex items-center justify-center">
+    <div className="min-h-svh bg-gradient-to-b from-[#FFEBC8]/70 to-amber-50 py-10 px-4 sm:px-6 flex items-center justify-center">
       <div className="w-full max-w-3xl rounded-2xl p-6 sm:p-8 shadow-xl border border-amber-100 relative backdrop-blur-sm bg-white/90">
-        
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 text-[#D4A017] mt-4">Quiz Questions</h2>
-        
         <div className="bg-white rounded-xl shadow-md overflow-hidden border border-amber-100">
-          <div className="bg-gradient-to-r from-[#FFEBB3] to-amber-100 py-4 px-6 border-b border-[#D4A017]/40 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-            <h3 className="text-xl font-bold text-amber-800">
+          <div className="bg-gradient-to-r from-[#FFEBB3] to-amber-100 py-4 px-6 border-b border-[#D4A017]/40 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">            <h3 className="text-xl font-bold text-amber-800">
               Pertanyaan {currentQuestionIndex + 1} dari {quizQuestions?.questions?.length || 0}
             </h3>
-            <div className="flex items-center text-amber-700 text-sm font-medium bg-white/60 py-1 px-3 rounded-full">
-              <FaInfoCircle className="mr-2 text-[#D4A017]" />
-              <span>Selesai: {quizQuestions?.expired_at ? new Date(quizQuestions?.expired_at).toLocaleString() : 'Tidak ada batas waktu'}</span>
-            </div>
+            <TimerDisplay expiryTime={quizQuestions?.expired_at} onExpire={handleSubmitQuiz} />
           </div>
           
           <div className="p-6 sm:p-8">

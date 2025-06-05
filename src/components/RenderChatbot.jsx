@@ -7,7 +7,7 @@ import { FaRegUser } from "react-icons/fa6";
 import { RiRobot2Fill } from "react-icons/ri";
 import { chatbotTrialService, chatbotService } from "../services";
 
-function RenderChatbot({ name, userExpression, isTrial = true}) {
+function RenderChatbot({ name = false, userExpression = false, isTrial = true}) {
   const scrollbarStyle = `
     .scrollbar-hide::-webkit-scrollbar {
       width: 5px;
@@ -44,8 +44,11 @@ function RenderChatbot({ name, userExpression, isTrial = true}) {
     neutral: `Hai ${name}!`,
   };
   
-  const moodMessage = moodMessages[userExpression];
-  const greeting = greetingMessages[userExpression];
+  const generalGreeting = "Hai! Selamat datang";
+  const generalMoodMessage = "senang bisa membantu anda hari ini";
+  
+  const moodMessage = userExpression ? moodMessages[userExpression] : generalMoodMessage;
+  const greeting = (name && userExpression) ? greetingMessages[userExpression] : generalGreeting;
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   
   const buttonTexts = {
@@ -58,7 +61,8 @@ function RenderChatbot({ name, userExpression, isTrial = true}) {
     neutral: "Obrolan sejenak?",
   };
 
-  const buttonText = buttonTexts[userExpression];
+  const generalButtonText = "Mulai percakapan";
+  const buttonText = userExpression ? buttonTexts[userExpression] : generalButtonText;
   
   const moodEmoji = {
     happy: "😊",
@@ -70,14 +74,18 @@ function RenderChatbot({ name, userExpression, isTrial = true}) {
     neutral: "😐",
   }
 
-  const emojiMoodText = moodEmoji[userExpression];
+  const generalEmoji = "👋";
+  const emojiMoodText = userExpression ? moodEmoji[userExpression] : generalEmoji;
   
-  const [inputMessage, setInputMessage] = useState("");
-  const [chatMessages, setChatMessages] = useState([
-    { sender: "bot", message: "Halo! Apa yang ingin kamu diskusikan hari ini?" },
-    { sender: "user", message: "Aku ingin berbicara tentang perasaanku" },
-    { sender: "bot", message: "Tentu, aku siap mendengarkan. Apa yang sedang kamu rasakan?" },
-  ]);
+  const [inputMessage, setInputMessage] = useState("");  const [chatMessages, setChatMessages] = useState(
+    userExpression ? [
+      { sender: "bot", message: "Halo! Apa yang ingin kamu diskusikan hari ini?" },
+      { sender: "user", message: "Aku ingin berbicara tentang perasaanku" },
+      { sender: "bot", message: "Tentu, aku siap mendengarkan. Apa yang sedang kamu rasakan?" },
+    ] : [
+      { sender: "bot", message: "Halo! Ada yang bisa saya bantu hari ini?" },
+    ]
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [userMessageCount, setUserMessageCount] = useState(0);
   const [reachedTrialLimit, setReachedTrialLimit] = useState(false);
@@ -107,13 +115,15 @@ function RenderChatbot({ name, userExpression, isTrial = true}) {
     }
     
     try {
-      const serviceFunction = isTrial ? chatbotTrialService : chatbotService;
-      const result = await serviceFunction(
+      let result
+      isTrial ? result = chatbotTrialService(
         name, 
         userMessage, 
         chatMessages,
-        userExpression
-      );
+        userExpression) : result = chatbotService(
+          userMessage,
+          chatMessages
+        )
       
       setChatMessages(prev => [...prev, { 
         sender: "bot", 
@@ -169,15 +179,14 @@ function RenderChatbot({ name, userExpression, isTrial = true}) {
             >
               {emojiMoodText}
             </motion.div>
-            
-            <motion.div 
+              <motion.div 
               className="font-medium text-base sm:text-lg md:text-xl text-gray-800 mb-1 sm:mb-2"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
             >
               <StreamText 
-                text={`${greeting} ${moodMessage} hari ini.`} 
+                text={userExpression ? `${greeting} ${moodMessage} hari ini.` : `${greeting}! ${moodMessage}.`} 
                 speed={40} 
                 autoNext={true}
               />
@@ -205,9 +214,8 @@ function RenderChatbot({ name, userExpression, isTrial = true}) {
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-[#D4A017] text-lg sm:text-xl text-white">
                 {emojiMoodText}
-              </div>
-              <div className="font-medium text-gray-800 text-sm sm:text-base">
-                {`${greeting} ${moodMessage} hari ini.`}
+              </div>              <div className="font-medium text-gray-800 text-sm sm:text-base">
+                {userExpression ? `${greeting} ${moodMessage} hari ini.` : `${greeting}! ${moodMessage}.`}
               </div>
             </div>            
             <button 
@@ -269,7 +277,8 @@ function RenderChatbot({ name, userExpression, isTrial = true}) {
               )}
               <div ref={messagesEndRef} className="h-4"></div>
             </div>
-          </motion.div>            <motion.div 
+          </motion.div>            
+          <motion.div 
             className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}

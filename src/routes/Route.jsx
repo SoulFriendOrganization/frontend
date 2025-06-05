@@ -18,7 +18,7 @@ const Routers = () => {
                     <Route path="/validate-website" element={<ValidateWebsitePage />} />
                     <Route path="/education" element={<EducationPage />} />
                     <Route path="/quiz" element={<QuizPage />} />
-                    <Route path="/quiz/:quiz_attempt_id" element={<QuizQuestionPage />} />
+                    <Route path="/quiz/:quiz_attempt_id/:question_id" element={<QuizQuestionPage />} />
                     <Route path="/mood-check" element={<MoodPage />} />
                     <Route path="/chatbot" element={<ChatbotPage />} />
                 </Route>

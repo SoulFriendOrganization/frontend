@@ -1,4 +1,5 @@
 import { POST_DATA } from "../api";
+import Cookies from "js-cookie";
 
 export const chatbotTrialService = async (username, message, history, mood) => {
     try {
@@ -23,6 +24,7 @@ export const chatbotTrialService = async (username, message, history, mood) => {
 };
 
 export const chatbotService = async (message, history) => {
+    const token = Cookies.get("token");
     try {
         const historyChat =
             history.length > 0
@@ -32,10 +34,19 @@ export const chatbotService = async (message, history) => {
                   }))
                 : [];
 
-        const response = await POST_DATA("api/v1/chat", {
-            message,
-            message_history: historyChat,
-        });
+        const response = await POST_DATA(
+            "api/v1/chat",
+            {
+                message,
+                message_history: historyChat,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
         return response.data;
     } catch (err) {
         console.log(err);

@@ -48,9 +48,10 @@ function MoodPage() {
         stream.getTracks().forEach((track) => track.stop());
       }
     };
-  }, []);    useEffect(() => {
+  }, []);    
+  
+  useEffect(() => {
     if (imageSent && userExpression) {
-      // The global state is now set in the RenderWebcam component
       navigate('/chatbot');
     }
   }, [imageSent, userExpression, navigate]);
@@ -70,7 +71,8 @@ function MoodPage() {
             className="flex flex-col items-center justify-center gap-4 p-4"
           >
             <h2 className="text-2xl font-bold text-[#D4A017] mb-2">Deteksi Mood</h2>
-            <p className="text-center mb-4">Silakan lihat ke kamera untuk mendeteksi mood Anda</p>            <RenderWebcam
+            <p className="text-center mb-4">Silakan lihat ke kamera untuk mendeteksi mood Anda</p>            
+            <RenderWebcam
               isVideoLoading={isVideoLoading}
               videoError={videoError}
               videoRef={videoRef}

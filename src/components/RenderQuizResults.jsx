@@ -3,6 +3,7 @@ import { Link } from "react-router";
 
 function RenderQuizResults({ 
   quizResults,
+  handleResetQuiz
 }) {
   return (
     <div className="w-full max-w-3xl bg-white/70 rounded-xl p-8 shadow-lg">
@@ -181,7 +182,7 @@ function RenderQuizResults({
               ))}
             </div>
           )}
-            <div className="flex flex-col sm:flex-row justify-center gap-3 mt-8">
+            <div className="flex flex-col sm:flex-row justify-center gap-3 mt-8" onClick={handleResetQuiz}>
             <Link to="/home">
               <button className="w-full cursor-pointer sm:w-auto px-6 py-2 bg-[#D4A017] text-white rounded-lg font-medium transition-all hover:bg-[#C09016]">
                 Kembali ke Home

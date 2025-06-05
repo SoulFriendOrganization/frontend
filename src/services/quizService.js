@@ -31,7 +31,6 @@ export const chooseQuizService = async (
                 description: response.data.description,
             });
         }
-        return response.data;
     } catch (error) {
         console.error(error);
         return null;
@@ -62,7 +61,9 @@ export const getQuizService = async (
         setQuizQuestions({
             ...response.data,
         });
-        navigate(`/quiz/${response.data.quiz_attempt_id}`);
+        navigate(
+            `/quiz/${response.data.quiz_attempt_id}/${response.data.questions[0].question_id}`
+        );
     } catch (error) {
         console.error(error);
     } finally {
@@ -81,7 +82,7 @@ export const submitAnswerService = async (
         setLoading(true);
         const userAnswers = Array.isArray(answers) ? answers : [answers];
 
-        const response = await PUT_DATA(
+        await PUT_DATA(
             `api/v1/quiz/submit/${quizAttemptId}/${questionId}`,
             {
                 user_answers: userAnswers,
@@ -93,10 +94,8 @@ export const submitAnswerService = async (
                 },
             }
         );
-        return response.data;
     } catch (error) {
         console.error("Error submitting answer:", error);
-        return null;
     } finally {
         setLoading(false);
     }
@@ -105,7 +104,8 @@ export const submitAnswerService = async (
 export const submitQuizService = async (
     quizAttemptId,
     setLoading,
-    setQuizResults
+    setQuizResults,
+    navigate
 ) => {
     try {
         const token = Cookies.get("token");
@@ -120,7 +120,9 @@ export const submitQuizService = async (
                 },
             }
         );
+
         setQuizResults(response.data);
+        navigate("/quiz");
     } catch (error) {
         console.error("Error submitting quiz:", error);
     } finally {
@@ -146,47 +148,19 @@ export const getAnswerUserQuizService = async (
     }
 };
 
-export const checkSessionAttemptQuizService = async (setQuizQuestions) => {
-    try {
-        const token = Cookies.get("token");
-        const response = await GET_DATA("api/v1/quiz/attempt", token);
-        setQuizQuestions((prev) =>
-            response.data.quiz_attempt_id
-                ? {
-                      ...prev,
-                      quiz_attempt_id: response.data.quiz_attempt_id,
-                  }
-                : prev
-        );
-    } catch (error) {
-        console.error("Error checking session attempt quiz:", error);
-    }
-};
-
 export const generateQuizAttemptService = async (
     quiz_attempt_id,
     setQuizQuestions
 ) => {
     try {
         const token = Cookies.get("token");
-        const response = await POST_DATA(
+        const response = await GET_DATA(
             `api/v1/quiz/attempt/${quiz_attempt_id}`,
-            {},
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            }
+            token
         );
 
-        if (setQuizQuestions) {
-            setQuizQuestions(response.data);
-        }
-
-        return response.data;
+        setQuizQuestions(response.data);
     } catch (error) {
         console.error("Error generating quiz attempt:", error);
-        return null;
     }
 };

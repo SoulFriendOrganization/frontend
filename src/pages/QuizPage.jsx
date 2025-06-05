@@ -16,30 +16,27 @@ function QuizPage() {
     const setQuizData = useQuizStore(state => state.setQuizData);
     const quizId = useQuizStore(state => state.quizId);
     const setQuizId = useQuizStore(state => state.setQuizId);
-    const quizQuestions = useQuizStore(state => state.quizQuestions);
     const setQuizQuestions = useQuizStore(state => state.setQuizQuestions);
     const isLoading = useQuizStore(state => state.isLoading);
     const setIsLoading = useQuizStore(state => state.setIsLoading);
     const isLoadingQuestions = useQuizStore(state => state.isLoadingQuestions);
     const setIsLoadingQuestions = useQuizStore(state => state.setIsLoadingQuestions);
     const quizResults = useQuizStore(state => state.quizResults);
+    const setQuizResults = useQuizStore(state => state.setQuizResults);
     
     const [tempTheme, setTempTheme] = useState("mental_health");
     const [tempDifficulty, setTempDifficulty] = useState("medium");
 
-    const currentScreen = !quizData 
+    const currentScreen = !quizData && !quizResults
         ? "quizSelection"
-        : quizQuestions && !quizResults
-        ? "quizQuestions"
         : quizResults
         ? "quizResults"
         : "quizPreview";    
-
-
+        
     const handleStartQuiz = () => {
+        setQuizResults(null);
         chooseQuizService(tempTheme, tempDifficulty, setIsLoading, setQuizId, setQuizData);
     };    
-    
     
     const handleContinueQuiz = async () => {
         if (!quizId) {
@@ -48,6 +45,15 @@ function QuizPage() {
         }
         getQuizService(quizId, setIsLoadingQuestions, setQuizQuestions, navigate);
     };
+
+    const handleResetQuiz = () => {
+        setQuizData(null);
+        setQuizId(null);
+        setQuizQuestions(null);
+        setIsLoading(false);
+        setIsLoadingQuestions(false);
+        setQuizResults(null);
+    }
     
     return (
         <div className="min-h-svh bg-[#FFEBC8] py-10 px-4 flex items-center justify-center">
@@ -78,6 +84,7 @@ function QuizPage() {
                 {currentScreen === "quizResults" && (
                     <RenderQuizResults
                         quizResults={quizResults}
+                        handleResetQuiz={handleResetQuiz}
                     />
                 )}
                 

@@ -23,6 +23,8 @@ function RenderWebcam({
   useEffect(() => {
     loadHaarFaceModels();
   }, []);
+
+  
     const sendImageToBackend = useCallback(async (imageData) => {
     if (pageType === "mood") {
       await checkMoodService(imageData, setUserExpression, setErrorMessage, setGlobalUserExpression);

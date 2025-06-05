@@ -10,7 +10,6 @@ import {
     getQuizService,
     submitAnswerService,
     submitQuizService,
-    checkSessionAttemptQuizService,
     generateQuizAttemptService,
     getAnswerUserQuizService,
 } from "./QuizService";
@@ -27,7 +26,6 @@ export {
     submitAnswerService,
     submitQuizService,
     getHomeService,
-    checkSessionAttemptQuizService,
     generateQuizAttemptService,
     getAnswerUserQuizService,
 };

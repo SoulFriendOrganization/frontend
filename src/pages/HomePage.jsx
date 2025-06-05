@@ -31,58 +31,66 @@ function HomePage() {
     getHomeService(setUserData, setLoading);
   }, []);
 
-  const chartData = {
-    labels: Object.keys(userData.monthly_mood),
-    datasets: [
-      {
-        label: 'Frekuensi Mood',
-        data: Object.values(userData.monthly_mood),
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.6)',
-          'rgba(54, 162, 235, 0.6)',
-          'rgba(75, 192, 192, 0.6)', 
-          'rgba(255, 159, 64, 0.6)',
-          'rgba(153, 102, 255, 0.6)', 
-          'rgba(255, 205, 86, 0.6)', 
-          'rgba(201, 203, 207, 0.6)'
-        ],
-        borderColor: [
-          'rgb(255, 99, 132)',
-          'rgb(54, 162, 235)',
-          'rgb(75, 192, 192)',
-          'rgb(255, 159, 64)',
-          'rgb(153, 102, 255)',
-          'rgb(255, 205, 86)',
-          'rgb(201, 203, 207)'
-        ],
-        borderWidth: 1
-      }
-    ]
-  };
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          precision: 0
-        }
-      }
-    }
-  };
+  let chartData
+  let chartOptions
 
-  if(loading ) {
+  if(!userData.redirect_url) {
+    chartData = {
+        labels: Object.keys(userData.monthly_mood),
+        datasets: [
+          {
+            label: 'Frekuensi Mood',
+            data: Object.values(userData.monthly_mood),
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(75, 192, 192, 0.6)', 
+              'rgba(255, 159, 64, 0.6)',
+              'rgba(153, 102, 255, 0.6)', 
+              'rgba(255, 205, 86, 0.6)', 
+              'rgba(201, 203, 207, 0.6)'
+            ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(54, 162, 235)',
+              'rgb(75, 192, 192)',
+              'rgb(255, 159, 64)',
+              'rgb(153, 102, 255)',
+              'rgb(255, 205, 86)',
+              'rgb(201, 203, 207)'
+            ],
+            borderWidth: 1
+          }
+        ]
+      };
+      chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              precision: 0
+            }
+          }
+        }
+      };
+
+  }
+
+  if(loading) {
     return (
       <div className="w-full min-h-svh flex flex-col items-center justify-center bg-[#FFEBC8]">
         <div className="flex flex-col items-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FFE2A8] mb-6"></div>
           <h1 className="text-center text-xl sm:text-2xl font-bold text-[#D4A017]">Memuat data...</h1>
           <p className="text-center text-gray-600 mt-2">Mohon tunggu sebentar</p>
-        </div>
-      </div>
+        </div>      </div>
     )
   }
+    if(userData.redirect_url) {
+        window.location.href = userData.redirect_url;
+    }
 
   return (
     <div className="w-full min-h-svh bg-[#FFEBC8] flex flex-col items-center">

@@ -26,11 +26,11 @@ function RenderWebcam({
 
   
     const sendImageToBackend = useCallback(async (imageData) => {
-    if (pageType === "mood") {
-      await checkMoodService(imageData, setUserExpression, setErrorMessage, setGlobalUserExpression);
-    } else {
-      await checkMoodTrialService(imageData, setUserExpression, setGlobalUserExpression);
-    }
+      if (pageType === "mood") {
+        await checkMoodService(imageData, setUserExpression, setErrorMessage, setGlobalUserExpression);
+      } else {
+        await checkMoodTrialService(imageData, setUserExpression, setGlobalUserExpression);
+      }
   }, [pageType, setUserExpression, setErrorMessage, setGlobalUserExpression]);
 
   const processFrame = useCallback(() => {

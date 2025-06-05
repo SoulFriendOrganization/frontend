@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { POST_DATA } from "../api";
 import Cookies from "js-cookie";
 
@@ -19,7 +20,7 @@ export const chatbotTrialService = async (username, message, history, mood) => {
         });
         return response.data;
     } catch (err) {
-        console.log(err);
+        window.location.href = "/error";
     }
 };
 
@@ -49,6 +50,6 @@ export const chatbotService = async (message, history) => {
         );
         return response.data;
     } catch (err) {
-        console.log(err);
+        window.location.href = "/error";
     }
 };

@@ -5,9 +5,11 @@ import { useState, useEffect, useRef } from "react";
 import { IoSend, IoClose } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa6";
 import { RiRobot2Fill } from "react-icons/ri";
-import { chatbotTrialService, chatbotService } from "../services";
+import { chatbotTrialService, chatbotService, textToSpeechService } from "../services";
 
 function RenderChatbot({ name = false, userExpression = false, isTrial = true}) {
+  const audioContextRef = useRef(null);
+
   const scrollbarStyle = `
     .scrollbar-hide::-webkit-scrollbar {
       width: 5px;
@@ -125,9 +127,7 @@ function RenderChatbot({ name = false, userExpression = false, isTrial = true}) 
           userMessage,
           chatMessages,
         )
-      
-      console.log(result);
-      
+
       setChatMessages(prev => [...prev, { 
         sender: "bot", 
         message: result.response || "Maaf, saya tidak dapat memproses permintaan saat ini."
@@ -143,7 +143,6 @@ function RenderChatbot({ name = false, userExpression = false, isTrial = true}) 
         }, 1000);
       }
     } catch (error) {
-      console.error("Error sending message:", error);
       setChatMessages(prev => [...prev, { 
         sender: "bot", 
         message: "Maaf, terjadi kesalahan saat berkomunikasi dengan server."
@@ -158,10 +157,60 @@ function RenderChatbot({ name = false, userExpression = false, isTrial = true}) 
       handleSendMessage();
     }
   };
-
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chatMessages]);
+
+    if (!audioContextRef.current) {
+      try {
+        audioContextRef.current = new AudioContext();
+      } catch (error) {
+        console.error("Error creating AudioContext:", error);
+      }
+    }
+
+    const audioFunction = async (message) => {
+      if (!audioContextRef.current) return;
+      
+      try {
+        const bufferData = await textToSpeechService(message);
+        audioContextRef.current.decodeAudioData(bufferData, function(audioBuffer) {
+          const sourceNode = audioContextRef.current.createBufferSource();
+          sourceNode.buffer = audioBuffer;
+          sourceNode.connect(audioContextRef.current.destination);
+          // sourceNode.start(0);
+        }, function(error) {
+          console.error("Error decoding audio data:", error);
+        });
+      } catch (error) {
+        console.error("Error in audioFunction:", error);
+      }
+    }
+
+    if(isChatbotOpen && chatMessages[chatMessages.length - 1].sender === 'bot') {
+      audioFunction(Array.isArray(chatMessages) ? chatMessages[chatMessages.length - 1].message : chatMessages.message);
+    }
+
+  
+    return () => {
+    
+    }
+
+  }, [chatMessages, isChatbotOpen]);
+
+  useEffect(() => {
+    return () => {
+      if (audioContextRef.current && audioContextRef.current.state === 'running') {
+        audioContextRef.current.close().catch(console.error);
+      }
+    };
+  }, []);
+
+  const handleOpeningButton = () => {
+    setIsChatbotOpen(!isChatbotOpen);
+    if (audioContextRef.current) {
+      audioContextRef.current.resume().catch(console.error);
+    }
+  }
 
   return (
     <div className="flex flex-col items-center p-3 sm:p-4 md:p-6 max-w-xl sm:max-w-2xl mx-auto h-full w-full">
@@ -218,12 +267,13 @@ function RenderChatbot({ name = false, userExpression = false, isTrial = true}) 
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-[#D4A017] text-lg sm:text-xl text-white">
                 {emojiMoodText}
-              </div>              <div className="font-medium text-gray-800 text-sm sm:text-base">
+              </div>              
+              <div className="font-medium text-gray-800 text-sm sm:text-base">
                 {userExpression ? `${greeting} ${moodMessage} hari ini.` : `${greeting}! ${moodMessage}.`}
               </div>
             </div>            
             <button 
-              onClick={() => setIsChatbotOpen(false)}
+              onClick={handleOpeningButton}
               className="text-gray-500 cursor-pointer hover:text-gray-700 bg-gray-100/50 hover:bg-gray-100 rounded-full p-1.5 sm:p-2 transition-colors"
             >
               <IoClose className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
@@ -309,7 +359,7 @@ function RenderChatbot({ name = false, userExpression = false, isTrial = true}) 
                   placeholder={isLoading ? "Menunggu respons..." : "Ketik pesanmu di sini..."}
                   className={`flex-grow p-2 sm:p-3 pl-3 sm:pl-4 text-sm sm:text-base ${isLoading ? 'bg-gray-100 text-gray-500' : 'bg-gray-100/50'} border-none rounded-full focus:outline-none focus:ring-1 focus:ring-[#D4A017] focus:bg-gray-100/80 transition-all`}
                   disabled={(isTrial && reachedTrialLimit) || isLoading}
-                />                
+                />     
                 <button
                   onClick={handleSendMessage}
                   className={`p-2 sm:p-3 ${(isTrial && reachedTrialLimit) || isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#D4A017] hover:bg-[#C09016] cursor-pointer'} text-white rounded-full transition-colors shadow-sm`}

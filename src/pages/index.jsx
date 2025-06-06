@@ -11,5 +11,6 @@ import MoodPage from "./MoodPage";
 import ChatbotPage from "./ChatbotPage";
 import QuizQuestionPage from "./QuizQuestionPage";
 import ErrorPage from "./ErrorPage";
+import TestPage from "./TestPage";
 
-export { MoodPage, LandingPage, OverviewPage, LoginPage, RegisterPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage, QuizPage, ChatbotPage, QuizQuestionPage, ErrorPage};
+export { TestPage, MoodPage, LandingPage, OverviewPage, LoginPage, RegisterPage, HomePage, ValidateWebsitePage, EducationPage, NotFoundPage, QuizPage, ChatbotPage, QuizQuestionPage, ErrorPage};

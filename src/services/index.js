@@ -4,7 +4,11 @@ import {
     checkMoodService,
     getHomeService,
 } from "./checkMoodService";
-import { chatbotService, chatbotTrialService } from "./chatbotService";
+import {
+    chatbotService,
+    chatbotTrialService,
+    textToSpeechService,
+} from "./chatbotService";
 import {
     chooseQuizService,
     getQuizService,
@@ -28,4 +32,5 @@ export {
     getHomeService,
     generateQuizAttemptService,
     getAnswerUserQuizService,
+    textToSpeechService,
 };

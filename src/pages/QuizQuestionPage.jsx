@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useParams, useNavigate } from "react-router";
 import { FaQuestion, FaSpinner, FaCheckCircle, FaRegCircle, FaCheckSquare, FaRegSquare, FaClock } from 'react-icons/fa';
 import { useEffect, useCallback, useState } from 'react';
@@ -197,7 +198,6 @@ function QuizQuestionPage() {
         }
       );
     } catch (error) {
-      console.error("Error submitting answer:", error);
       setIsSubmittingAnswer(false);
       setLoadingAnswerFor(null);
     }
@@ -217,7 +217,6 @@ function QuizQuestionPage() {
         );        
       }
     } catch (error) {
-      console.error("Error submitting quiz:", error);
       setIsSubmittingQuiz(false);
     }
   }, [quiz_attempt_id, submitCurrentQuestionAnswers, setIsSubmittingQuiz, setQuizResults, navigate]);
@@ -253,7 +252,6 @@ function QuizQuestionPage() {
           setIsLoadingQuestions(true);
           await generateQuizAttemptService(quiz_attempt_id, setQuizQuestions);
         } catch (error) {
-          console.error("Error generating quiz questions:", error);
           navigate("/quiz", { replace: true });
         } finally {
           setIsLoadingQuestions(false);

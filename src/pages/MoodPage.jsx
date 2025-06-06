@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-unused-vars
+/* eslint-disable no-unused-vars */
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { RenderWebcam } from "../components";
@@ -35,7 +35,6 @@ function MoodPage() {
           }
         })
         .catch((error) => {
-          console.error("Error accessing webcam:", error);
           setVideoError("Tidak dapat mengakses webcam. Pastikan izin kamera diaktifkan.");
         })
         .finally(() => {

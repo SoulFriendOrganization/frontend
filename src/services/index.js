@@ -17,6 +17,7 @@ import {
     generateQuizAttemptService,
     getAnswerUserQuizService,
 } from "./QuizService";
+import { validateWebsiteService } from "./validateWebsiteService";
 
 export {
     registerService,
@@ -33,4 +34,5 @@ export {
     generateQuizAttemptService,
     getAnswerUserQuizService,
     textToSpeechService,
+    validateWebsiteService,
 };

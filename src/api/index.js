@@ -36,6 +36,22 @@ export const POST_DATA = async (endpoint, data, header, fromUrl = false) => {
     return response;
 };
 
+export const POST_DATA_SECOND = async (endpoint, data, token, header) => {
+    const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL_V2_BACKEND}/${endpoint}`,
+        data,
+        header
+            ? header
+            : {
+                  headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                  },
+              }
+    );
+    return response;
+};
+
 export const PUT_DATA = async (endpoint, data, header) => {
     const response = await axios.put(
         `${import.meta.env.VITE_BASE_URL_BACKEND}/${endpoint}`,

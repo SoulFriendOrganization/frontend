@@ -206,7 +206,7 @@ function RenderChatbot({ name = false, userExpression = false, isTrial = true}) 
   }, []);
 
   const handleOpeningButton = () => {
-    setIsChatbotOpen(!isChatbotOpen);
+    setIsChatbotOpen(true);
     if (audioContextRef.current) {
       audioContextRef.current.resume().catch(console.error);
     }
@@ -252,7 +252,7 @@ function RenderChatbot({ name = false, userExpression = false, isTrial = true}) 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.3 }}
-            onClick={() => setIsChatbotOpen(true)}
+            onClick={handleOpeningButton}
           >
             {buttonText}
           </motion.button>
@@ -273,7 +273,7 @@ function RenderChatbot({ name = false, userExpression = false, isTrial = true}) 
               </div>
             </div>            
             <button 
-              onClick={handleOpeningButton}
+              onClick={() => setIsChatbotOpen(!isChatbotOpen)}
               className="text-gray-500 cursor-pointer hover:text-gray-700 bg-gray-100/50 hover:bg-gray-100 rounded-full p-1.5 sm:p-2 transition-colors"
             >
               <IoClose className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />

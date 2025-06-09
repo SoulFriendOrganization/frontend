@@ -20,7 +20,10 @@ export const registerService = async (
         reset();
         navigate("/login");
     } catch (error) {
-        errorState(error.message);
+        errorState(
+            error.response.data.message ||
+                "Registration failed. Please try again."
+        );
     } finally {
         loadingState(false);
     }
@@ -56,7 +59,10 @@ export const loginService = async (
         reset();
         navigate("/home");
     } catch (error) {
-        errorState(error.message);
+        errorState(
+            error.response.data.message ||
+                "Login failed. Please check your credentials."
+        );
     } finally {
         loadingState(false);
     }

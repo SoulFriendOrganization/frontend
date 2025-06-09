@@ -21,7 +21,7 @@ export const registerService = async (
         navigate("/login");
     } catch (error) {
         errorState(
-            error.response.data.message ||
+            error.response.data.detail ||
                 "Registration failed. Please try again."
         );
     } finally {
@@ -60,7 +60,7 @@ export const loginService = async (
         navigate("/home");
     } catch (error) {
         errorState(
-            error.response.data.message ||
+            error.response.data.detail ||
                 "Login failed. Please check your credentials."
         );
     } finally {

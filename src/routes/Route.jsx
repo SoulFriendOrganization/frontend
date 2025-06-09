@@ -22,7 +22,6 @@ const Routers = () => {
                     <Route path="/mood-check" element={<MoodPage />} />
                     <Route path="/chatbot" element={<ChatbotPage />} />
                 </Route>
-                <Route path="/test" element={<TestPage/>} />
 
                 <Route path="*" element={<NotFoundPage />} />
                 <Route path="/error" element={<ErrorPage />} />

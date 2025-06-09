@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { GET_DATA, POST_DATA } from "../api";
 import Cookies from "js-cookie";
 
@@ -16,7 +15,7 @@ export const checkMoodTrialService = async (
 
         setGlobalUserExpression(prediction);
     } catch (error) {
-        window.location.href = "/error";
+        console.log(error);
     }
 };
 

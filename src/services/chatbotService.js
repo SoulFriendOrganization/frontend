@@ -21,7 +21,7 @@ export const chatbotTrialService = async (username, message, history, mood) => {
         });
         return response.data;
     } catch (err) {
-        window.location.href = "/error";
+        console.log(err);
     }
 };
 
@@ -55,16 +55,13 @@ export const chatbotService = async (message, history) => {
     }
 };
 
-export const textToSpeechService = async (message) => {
+export const textToSpeechService = (message) => {
     return new Promise((resolve, reject) => {
         try {
             const speechConfig = sdk.SpeechConfig.fromSubscription(
                 import.meta.env.VITE_SPEECH_KEY,
                 import.meta.env.VITE_SPEECH_REGION
             );
-            speechConfig.speechSynthesisVoiceName =
-                "zh-CN-XiaoxiaoMultilingualNeural";
-            speechConfig.speechSynthesisLanguage = "id-ID";
             const speechSynthesizer = new sdk.SpeechSynthesizer(speechConfig);
             const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="id-ID">
     <voice name="zh-CN-XiaoxiaoMultilingualNeural">
@@ -81,7 +78,6 @@ export const textToSpeechService = async (message) => {
                     resolve(result.audioData);
                 },
                 (error) => {
-                    console.log(error);
                     speechSynthesizer.close();
                     reject(error);
                 }

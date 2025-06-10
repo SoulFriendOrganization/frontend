@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { FaArrowRight } from "react-icons/fa";
 import { TbMoodWink, TbBrain, TbBook, TbSearch, TbMoodSmile, TbAward, TbChartBar, TbCalendarStats, TbMessage } from "react-icons/tb";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { getHomeService } from "../services";
+import { hasAgreedToMoodCheck, setMoodCheckAgreement, shouldShowMoodAlert, setDontShowMoodAlert } from "../utils";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function HomePage() {
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     full_name: "",
     age: 0,
@@ -24,23 +26,57 @@ function HomePage() {
     },
     score: 0,
     point_earned: 0
-  });
-  const [loading, setLoading] = useState(true);
-
+  });  const [loading, setLoading] = useState(true);
+  const [showMoodCheckTerms, setShowMoodCheckTerms] = useState(false);
+  const [dontShowAgain, setDontShowAgain] = useState(false);
   useEffect(() => {
     getHomeService(setUserData, setLoading);
   }, []);
+  const handleMoodCheckClick = (e) => {
+    e.preventDefault();
+    
+    // Check if user has already agreed to camera usage or doesn't want to see alert
+    if (hasAgreedToMoodCheck() || !shouldShowMoodAlert()) {
+      navigate("/mood-check");
+    } else {
+      setShowMoodCheckTerms(true);
+    }
+  };
+
+  const handleMoodCheckAgree = () => {
+    setMoodCheckAgreement(true);
+    if (dontShowAgain) {
+      setDontShowMoodAlert();
+    }
+    setShowMoodCheckTerms(false);
+    navigate("/mood-check");
+  };
+
+  const handleMoodCheckDisagree = () => {
+    if (dontShowAgain) {
+      setDontShowMoodAlert();
+    }
+    setShowMoodCheckTerms(false);
+  };
 
   let chartData
   let chartOptions
 
   if(!userData.redirect_url) {
     chartData = {
-        labels: Object.keys(userData.monthly_mood),
+        labels: Object.keys(userData.monthly_mood || {
+            Happy: 0,
+            Surprise: 0,
+            Sad: 0,
+            Anger: 0,
+            Disgust: 0,
+            Fear: 0,
+            Neutral: 0
+        }),
         datasets: [
           {
             label: 'Frekuensi Mood',
-            data: Object.values(userData.monthly_mood),
+            data: Object.values(userData.monthly_mood || {}) || [0, 0, 0, 0, 0, 0, 0],
             backgroundColor: [
               'rgba(255, 99, 132, 0.6)',
               'rgba(54, 162, 235, 0.6)',
@@ -88,7 +124,8 @@ function HomePage() {
         </div>      </div>
     )
   }
-    if(userData.redirect_url) {
+
+    if(userData.redirect_url) {        
         window.location.href = userData.redirect_url;
     }
 
@@ -132,7 +169,15 @@ function HomePage() {
                     <div className="min-h-[200px] sm:min-h-[250px] flex items-center justify-center">
                         {loading ? (
                             <p className="text-sm text-gray-500">Memuat data...</p>
-                        ) : Object.values(userData.monthly_mood).some(value => value > 0) ? (
+                        ) : Object.values(userData.monthly_mood || {
+                            Happy: 0,
+                            Surprise: 0,
+                            Sad: 0,
+                            Anger: 0,
+                            Disgust: 0,
+                            Fear: 0,
+                            Neutral: 0
+                        }).some(value => value > 0) ? (
                             <Bar 
                                 data={chartData} 
                                 options={chartOptions}
@@ -156,14 +201,16 @@ function HomePage() {
                         </Link>
                     </div>
                 </div>
-            ) : (
-                <div className="mb-8 sm:mb-12 flex flex-col items-center justify-center py-6 sm:py-8 px-4 sm:px-8 md:px-12 rounded-lg bg-white/50 shadow-sm w-full">
+            ) : (                <div className="mb-8 sm:mb-12 flex flex-col items-center justify-center py-6 sm:py-8 px-4 sm:px-8 md:px-12 rounded-lg bg-white/50 shadow-sm w-full">
                     <h1 className="font-bold text-2xl sm:text-3xl mb-2 sm:mb-3 text-center">Bagaimana Perasaanmu Hari Ini?</h1>
                     <p className="text-center text-gray-700 mb-4 sm:mb-6 text-sm sm:text-base">Lakukan pengecekan mood harian untuk memahami kondisi mental Anda</p>
                     <div className="w-full max-w-xs rounded-md overflow-hidden text-white">
-                        <Link to="/mood-check" className="bg-[#D4A017] w-full h-12 sm:h-14 items-center justify-center flex gap-2 font-medium hover:bg-[#C09016] transition-colors text-sm sm:text-base">
+                        <button 
+                            onClick={handleMoodCheckClick}
+                            className="bg-[#D4A017] w-full h-12 sm:h-14 items-center justify-center flex gap-2 font-medium hover:bg-[#C09016] transition-colors text-sm sm:text-base cursor-pointer"
+                        >
                             Cek Mood Sekarang <TbMoodWink className="w-5 sm:w-6 h-5 sm:h-6"/>
-                        </Link>
+                        </button>
                     </div>
                 </div>
             )}
@@ -199,14 +246,47 @@ function HomePage() {
                         <h3 className="font-semibold text-lg sm:text-xl mb-2 sm:mb-3 text-center">Cek Validitas Website</h3>
                         <p className="text-center text-gray-700 mb-4 sm:mb-6 text-sm sm:text-base">Verifikasi keaslian website untuk menghindari informasi hoax dan judi online</p>
                     </div>
-                    <div className="w-full rounded-md overflow-hidden text-white">
-                        <Link to="/validate-website" className="bg-[#D4A017] w-full h-10 sm:h-12 items-center justify-center flex gap-2 hover:bg-[#C09016] transition-colors text-sm sm:text-base">
+                    <div className="w-full rounded-md overflow-hidden text-white">                        <Link to="/validate-website" className="bg-[#D4A017] w-full h-10 sm:h-12 items-center justify-center flex gap-2 hover:bg-[#C09016] transition-colors text-sm sm:text-base">
                             Verifikasi Website <FaArrowRight className="w-3 sm:w-4 h-3 sm:h-4"/>
                         </Link>
                     </div>
                 </div>
             </div>
         </div>
+        {showMoodCheckTerms && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                <div className="bg-white rounded-xl shadow-lg max-w-md w-full mx-4 p-8 text-center">
+                    <h2 className="text-xl font-semibold mb-4 text-[#D4A017]">Persetujuan Penggunaan Kamera</h2>                    <p className="text-gray-700 mb-6">
+                        Pada halaman berikutnya, Anda akan diminta untuk membuka kamera. Jangan khawatir, foto Anda <span className="font-semibold">tidak akan disimpan</span> dan hanya digunakan untuk keperluan mendeteksi mood saja.
+                    </p>
+                    <div className="flex items-center justify-center mb-6">
+                        <label className="flex items-center cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={dontShowAgain}
+                                onChange={(e) => setDontShowAgain(e.target.checked)}
+                                className="mr-2 h-4 w-4 text-[#D4A017] focus:ring-[#D4A017] border-gray-300 rounded"
+                            />
+                            <span className="text-sm text-gray-600">Jangan tampilkan pesan ini lagi</span>
+                        </label>
+                    </div>
+                    <div className="flex justify-center gap-4">
+                        <button
+                            onClick={handleMoodCheckDisagree}
+                            className="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition cursor-pointer"
+                        >
+                            Tidak Setuju
+                        </button>
+                        <button
+                            onClick={handleMoodCheckAgree}
+                            className="px-6 py-2 rounded-lg bg-[#D4A017] text-white hover:bg-[#C39316] transition cursor-pointer"
+                        >
+                            Setuju
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
     </div>
   );
 }

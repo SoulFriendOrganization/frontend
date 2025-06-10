@@ -66,7 +66,12 @@ export const getHomeService = async (setData, setLoading) => {
         const response = await GET_DATA("api/v1/fetch_stat", token);
         setData(response.data);
     } catch (error) {
-        setData({ redirect_url: error.response.data.detail.redirect_url });
+        if (error.response && error.response.status === 401) {
+            setData({ redirect_url: "/login" });
+            Cookies.remove("token");
+        } else if (error.response && error.response.status === 307) {
+            setData({ redirect_url: error.response.data.detail.redirect_url });
+        }
     } finally {
         setLoading(false);
     }

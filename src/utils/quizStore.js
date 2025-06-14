@@ -1,7 +1,6 @@
 import { create } from "zustand";
 
 const useQuizStore = create((set) => ({
-    // State
     quizData: null,
     quizId: "",
     quizQuestions: null,
@@ -14,7 +13,6 @@ const useQuizStore = create((set) => ({
     quizResults: null,
     isSubmittingQuiz: false,
 
-    // Actions
     setQuizData: (data) => set({ quizData: data }),
     setQuizId: (id) => set({ quizId: id }),
     setQuizQuestions: (questions) => set({ quizQuestions: questions }),
@@ -22,7 +20,6 @@ const useQuizStore = create((set) => ({
     setIsLoadingQuestions: (loading) => set({ isLoadingQuestions: loading }),
     setCurrentQuestionIndex: (index) => set({ currentQuestionIndex: index }),
     setUserAnswers: (answers) => set({ userAnswers: answers }),
-    // Helper action to update a single answer
     updateUserAnswer: (questionId, answer) =>
         set((state) => ({
             userAnswers: {

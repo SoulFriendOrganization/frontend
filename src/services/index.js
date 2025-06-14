@@ -16,7 +16,7 @@ import {
     submitQuizService,
     generateQuizAttemptService,
     getAnswerUserQuizService,
-} from "./QuizService";
+} from "./quizService";
 import { validateWebsiteService } from "./validateWebsiteService";
 
 export {

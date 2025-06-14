@@ -29,13 +29,14 @@ function HomePage() {
   });  const [loading, setLoading] = useState(true);
   const [showMoodCheckTerms, setShowMoodCheckTerms] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
+
   useEffect(() => {
     getHomeService(setUserData, setLoading);
   }, []);
+  
   const handleMoodCheckClick = (e) => {
     e.preventDefault();
     
-    // Check if user has already agreed to camera usage or doesn't want to see alert
     if (hasAgreedToMoodCheck() || !shouldShowMoodAlert()) {
       navigate("/mood-check");
     } else {

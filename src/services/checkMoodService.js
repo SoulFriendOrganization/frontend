@@ -46,6 +46,9 @@ export const checkMoodService = async (
                 setErrorMessage(
                     "Anda perlu login terlebih dahulu untuk menggunakan fitur ini"
                 );
+                setTimeout(() => {
+                    window.location.href = "/login";
+                }, 2000);
             } else if (error.response.status === 400) {
                 const errorMsg =
                     error.response.data?.detail ||

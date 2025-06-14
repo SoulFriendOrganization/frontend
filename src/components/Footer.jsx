@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { 
   FaEnvelope, FaPhone, FaMapMarkerAlt, 
   FaFacebook, FaTwitter, FaInstagram, 
-  FaLinkedin, FaHeart, FaArrowUp 
+  FaLinkedin
 } from "react-icons/fa";
 
 function Footer() {

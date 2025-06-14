@@ -19,7 +19,6 @@ export function detectHaarFace(img) {
 
     const faces = new cv.RectVector();
     const faceCascade = new cv.CascadeClassifier();
-    // Use the same path as provided in the loadHaarFaceModels function
     faceCascade.load("/haarcascade_frontalface_default.xml");
 
     const msize = new cv.Size(0, 0);

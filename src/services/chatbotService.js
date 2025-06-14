@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { POST_DATA } from "../api";
 import Cookies from "js-cookie";
 import * as sdk from "microsoft-cognitiveservices-speech-sdk";
@@ -51,7 +50,11 @@ export const chatbotService = async (message, history) => {
         );
         return response.data;
     } catch (err) {
-        window.location.href = "/error";
+        if (err.response.status === 401) {
+            window.location.href = "/login";
+        } else {
+            window.location.href = "/error";
+        }
     }
 };
 
@@ -83,7 +86,6 @@ export const textToSpeechService = (message) => {
                 }
             );
         } catch (error) {
-            console.error("Error in text-to-speech service:", error);
             reject(error);
         }
     });

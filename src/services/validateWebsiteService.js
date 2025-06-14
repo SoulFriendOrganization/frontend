@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { POST_DATA_SECOND } from "../api";
 import Cookies from "js-cookie";
 
@@ -15,11 +14,15 @@ export const validateWebsiteService = async (url, setState, setLoading) => {
         );
         setState(response.data);
     } catch (error) {
-        setState({
-            is_harmful: null,
-            summary_harmful:
-                "Terjadi kesalahan saat memvalidasi website. Silakan coba lagi nanti.",
-        });
+        if (error.response.status === 401) {
+            window.location.href = "/login";
+        } else {
+            setState({
+                is_harmful: null,
+                summary_harmful:
+                    "Terjadi kesalahan saat memvalidasi website. Silakan coba lagi nanti.",
+            });
+        }
     } finally {
         setLoading(false);
     }

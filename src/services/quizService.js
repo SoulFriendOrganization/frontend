@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { GET_DATA, POST_DATA, PUT_DATA } from "../api";
 import Cookies from "js-cookie";
 
@@ -31,7 +30,11 @@ export const chooseQuizService = async (
             description: response.data.description,
         });
     } catch (error) {
-        window.location.href = "/error";
+        if (error.response.status === 401) {
+            window.location.href = "/login";
+        } else {
+            window.location.href = "/error";
+        }
     } finally {
         setLoading(false);
     }
@@ -61,7 +64,11 @@ export const getQuizService = async (
         });
         navigate(`/quiz/${response.data.quiz_attempt_id}`);
     } catch (error) {
-        window.location.href = "/error";
+        if (error.response.status === 401) {
+            window.location.href = "/login";
+        } else {
+            window.location.href = "/error";
+        }
     } finally {
         if (setLoading) setLoading(false);
     }
@@ -91,7 +98,11 @@ export const submitAnswerService = async (
             }
         );
     } catch (error) {
-        window.location.href = "/error";
+        if (error.response.status === 401) {
+            window.location.href = "/login";
+        } else {
+            console.log("Error submitting answer:", error);
+        }
     } finally {
         setLoading(false);
     }
@@ -120,7 +131,11 @@ export const submitQuizService = async (
         setQuizResults(response.data);
         navigate("/quiz");
     } catch (error) {
-        window.location.href = "/error";
+        if (error.response.status === 401) {
+            window.location.href = "/login";
+        } else {
+            console.log("Error submitting quiz:", error);
+        }
     } finally {
         setLoading(false);
     }
@@ -139,7 +154,11 @@ export const getAnswerUserQuizService = async (
         );
         setAnswer(response.data);
     } catch (error) {
-        console.error("Error fetching user answer:", error);
+        if (error.response.status === 401) {
+            window.location.href = "/login";
+        } else {
+            console.error("Error fetching user answer:", error);
+        }
     }
 };
 
@@ -156,6 +175,10 @@ export const generateQuizAttemptService = async (
 
         setQuizQuestions(response.data);
     } catch (error) {
-        console.error("Error generating quiz attempt:", error);
+        if (error.response.status === 401) {
+            window.location.href = "/login";
+        } else {
+            console.error("Error generating quiz attempt:", error);
+        }
     }
 };

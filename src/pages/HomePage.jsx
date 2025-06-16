@@ -112,26 +112,33 @@ function HomePage() {
           }
         }
       };
-
   }
 
-  if(loading) {
-    return (
-      <div className="w-full min-h-svh flex flex-col items-center justify-center bg-[#FFEBC8]">
-        <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FFE2A8] mb-6"></div>
-          <h1 className="text-center text-xl sm:text-2xl font-bold text-[#D4A017]">Memuat data...</h1>
-          <p className="text-center text-gray-600 mt-2">Mohon tunggu sebentar</p>
-        </div>      
-        </div>
-    )
-  }
+    if(loading) {
+        return (
+        <div className="w-full min-h-svh flex flex-col items-center justify-center bg-[#FFEBC8]">
+            <div className="flex flex-col items-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FFE2A8] mb-6"></div>
+            <h1 className="text-center text-xl sm:text-2xl font-bold text-[#D4A017]">Memuat data...</h1>
+            <p className="text-center text-gray-600 mt-2">Mohon tunggu sebentar</p>
+            </div>      
+            </div>
+        )
+    }
 
-if(userData.redirect_url) {
-    const url = new URL(userData.redirect_url);
-    const path = url.pathname + url.search + url.hash;
-    window.location.href = `https://soulfriend.rikztech.my.id${path}`;
-}
+    if (userData.redirect_url) {
+        let url = userData.redirect_url;
+        const quizMatch = url.match(/\/quiz\/([0-9a-fA-F-]{36})/);
+        if (quizMatch) {
+            url = `https://soulfriend.rikztech.my.id${quizMatch[0]}`;
+        } else {
+            const match = url.match(/^None(\/.+)$/);
+            if (match) {
+                url = `https://soulfriend.rikztech.my.id${match[1]}`;
+            }
+        }
+        window.location.href = url;
+    }
 
   return (
     <div className="w-full min-h-svh bg-[#FFEBC8] flex flex-col items-center">

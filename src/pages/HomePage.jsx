@@ -122,13 +122,16 @@ function HomePage() {
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#FFE2A8] mb-6"></div>
           <h1 className="text-center text-xl sm:text-2xl font-bold text-[#D4A017]">Memuat data...</h1>
           <p className="text-center text-gray-600 mt-2">Mohon tunggu sebentar</p>
-        </div>      </div>
+        </div>      
+        </div>
     )
   }
 
-    if(userData.redirect_url) {        
-        window.location.href = userData.redirect_url;
-    }
+if(userData.redirect_url) {
+    const url = new URL(userData.redirect_url);
+    const path = url.pathname + url.search + url.hash;
+    window.location.href = `https://soulfriend.rikztech.my.id${path}`;
+}
 
   return (
     <div className="w-full min-h-svh bg-[#FFEBC8] flex flex-col items-center">

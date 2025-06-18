@@ -87,8 +87,6 @@ function LoginPage() {
                                 </div>
                                 {errors.password && <p className="text-red-500 text-xs mt-1 ml-1">{errors.password.message}</p>}
                             </div>
-                            <div className="flex items-center justify-between mb-4">
-                                <a href="#" className="text-sm text-[#D4A017] hover:underline">Forgot password?</a>                            </div>
                             {error && (
                                 <div className="mb-4 p-3 bg-red-100 border border-red-200 text-red-700 rounded-lg">
                                     {error}
